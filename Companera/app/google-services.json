@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "852918205439",
+    "firebase_url": "https://companera-b01a4.firebaseio.com",
+    "project_id": "companera-b01a4",
+    "storage_bucket": "companera-b01a4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:852918205439:android:c089e763ab7ebe94",
+        "android_client_info": {
+          "package_name": "trainedge.companera"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "852918205439-vio4evropmst2k5cn2qcuod4rl5orq09.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "trainedge.companera",
+            "certificate_hash": "1fce50afcbe9dab2fef2ba990745dfcabc695d94"
+          }
+        },
+        {
+          "client_id": "852918205439-a0nah8lhondacje58pubnfu0v41leqg6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBaSFPRXIeLfHY2hJsE0ZWG7XVIHhfXb1I"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "852918205439-a0nah8lhondacje58pubnfu0v41leqg6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
