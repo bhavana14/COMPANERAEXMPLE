@@ -111,7 +111,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
             @Override
             public void onError(FacebookException error) {
                 Log.d(TAG, "facebook:onError", error);
-                // ...
+
             }
         });
 
@@ -175,7 +175,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                     Toast.makeText(MainActivity.this, "Authentication failed.",
                             Toast.LENGTH_SHORT).show();
                 }
-                // ...
+
             }
         });
     }

@@ -44,24 +44,14 @@
         android:contentDescription="@string/companera"
         app:srcCompat="@drawable/common_google_signin_btn_icon_light_normal" />
 
-    <Button
-        android:id="@+id/ivFbSignIn"
-        android:layout_width="90dp"
-        android:layout_height="90dp"
-        android:layout_alignEnd="@+id/textView2"
-        android:layout_alignTop="@+id/ivGoogle_Sign_In"
-        android:layout_marginEnd="11dp"
-        android:background="@drawable/com_facebook_button_icon_blue"
-        android:textColor="@color/cardview_light_background"
-        android:textSize="50sp"
-        android:textStyle="bold" />
     <com.facebook.login.widget.LoginButton
         android:id="@+id/login_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="150dp"
+        android:layout_height="50dp"
+        android:layout_alignEnd="@+id/textView2"
+        android:layout_alignStart="@+id/ivGoogle_Sign_In"
+        android:layout_below="@+id/ivGoogle_Sign_In"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="36dp"
-        android:layout_below="@+id/ivFbSignIn"
-        android:layout_alignStart="@+id/ivLogo" />
+        android:layout_marginTop="44dp" />
 
 </RelativeLayout>
