@@ -3,6 +3,8 @@
     package="trainedge.companera">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application
         android:allowBackup="true"
@@ -11,21 +13,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity
-            android:name=".MainActivity"
-            android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".companera"
-            android:label="@string/title_activity_companera"
-            android:theme="@style/AppTheme.NoActionBar" />
-
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
@@ -41,21 +28,40 @@
 
                 <data android:scheme="@string/fb_login_protocol_scheme" />
             </intent-filter>
+
+            <receiver android:name=".receivers.BootReceiver" />
         </activity>
         <activity
-            android:name=".SettingsActivity"
-            android:label="@string/title_activity_settings"
-            android:parentActivityName=".companera"
+            android:name=".Splash_Activity"
             android:theme="@style/AppTheme.NoActionBar">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="trainedge.companera.companera" />
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity
-            android:name=".AboutActivity"
-            android:label="@string/title_activity_about"
+            android:name=".Login_Activity"
+            android:label="COMPANERA"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".Splash_Activity"></activity>
+        <activity
+            android:name=".Home_Activity"
+            android:label="@string/title_activity_home_"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_maps_key" />
+
+        <activity
+            android:name=".MapsActivity"
+            android:label="@string/title_activity_maps">
+
+        </activity>
+
+        <service
+            android:name=".FetchAddressIntentService"
+            android:exported="false"></service>
     </application>
 
 </manifest>

@@ -1,0 +1,21 @@
+<resources>
+    <!--
+
+
+    To get one, follow this link, follow the directions and press "Create" at the end:
+
+    https://console.developers.google.com/flows/enableapi?apiid=maps_android_backend&keyType=CLIENT_SIDE_ANDROID&r=A0:B0:5F:D3:9D:1C:64:CA:39:E3:2E:9C:96:AC:9E:DC:44:03:39:DE%3Bcom.davidos.locationtracker
+
+    You can also add your credentials to an existing key, using this line:
+    A0:B0:5F:D3:9D:1C:64:CA:39:E3:2E:9C:96:AC:9E:DC:44:03:39:DE;com.davidos.locationtracker
+
+    Alternatively, follow the directions here:
+    https://developers.google.com/maps/documentation/android/start#get-key
+
+    Once you have your key (it starts with "AIza"), replace the "google_maps_key"
+    string in this file.
+    -->
+    <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">
+         AIzaSyCyKAciDWvdlXeOtiyewHj_-SnfI_RxbAY
+    </string>
+</resources>
