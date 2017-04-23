@@ -48,5 +48,11 @@
     <string name="app_title">title</string>
     <string name="Add">add</string>
     <string name="Cancel">cancel</string>
+    <string name="no_geocoder_available">no geocoder found</string>
+    <string name="title_activity_creation">"Create "</string>
+    <string name="invitation_title">invite friends</string>
+    <string name="invitation_message">connect with us and enjoy the service</string>
+    <string name="invitation_cta">friends</string>
+    <string name="title_activity_feedback_">Feedback</string>
 
 </resources>

@@ -1,18 +1,23 @@
 package trainedge.companera;
 
-import android.app.DownloadManager;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.location.Geocoder;
 import android.location.Location;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
-import android.os.Bundle;
 import android.support.v4.os.ResultReceiver;
+import android.util.Log;
+import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,60 +38,209 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
+import static trainedge.companera.FetchAddressIntentService.Constants.PACKAGE_NAME;
 
-    private static final int REQUEST_LOCATION_PERMISSION = 2345;
-    private static final int REQUEST_CHECK_SETTINGS = 4567;
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, View.OnClickListener {
+    private static final int REQUEST_LOCATION_PERMISSION = 2312;
+    private static final int REQUEST_CHECK_SETTINGS = 9389;
+    public static final String KEY_ADDRESS = PACKAGE_NAME + ".address";
+    public static final String KEY_LAT = PACKAGE_NAME + ".latitude";
+    public static final String KEY_LNG = PACKAGE_NAME + ".longitude";
     private GoogleMap mMap;
     private GoogleApiClient mGoogleApiClient;
     private LocationRequest mLocationRequest;
     private AddressResultReceiver mResultReceiver;
-    private Location location;
-    private String mAddressOutput;
+    private Location currentLocation;
     private TextView tvAddress;
+
+    protected Location mLastLocation;
+
+    protected static final String ADDRESS_REQUESTED_KEY = "address-request-pending";
+    protected static final String LOCATION_ADDRESS_KEY = "currentLocation-address";
+
+    protected boolean mAddressRequested;
+    protected String mAddressOutput;
+    private ProgressBar pbLoader;
+    private LatLng userSelectedLatLng;
+    private FloatingActionButton fabConfirm;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
-        // create UI object
         tvAddress = (TextView) findViewById(R.id.tvAddress);
+        pbLoader = (ProgressBar) findViewById(R.id.pbLoader);
+        fabConfirm = (FloatingActionButton) findViewById(R.id.fabConfirm);
+        fabConfirm.setOnClickListener(this);
+        pbLoader.setVisibility(View.GONE);
+        fabConfirm.setVisibility(View.GONE);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        // only for M or above
+        mResultReceiver = new AddressResultReceiver(new Handler());
+        //only for m or above
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION}, REQUEST_LOCATION_PERMISSION);
+            if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION}, REQUEST_LOCATION_PERMISSION);
+                return;
+            } else {
+                Toast.makeText(this, "permission granted", Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            Toast.makeText(this, "Not Marshmellow", Toast.LENGTH_SHORT).show();
         }
+
+        mAddressRequested = true;
+        mAddressOutput = "";
+        updateValuesFromBundle(savedInstanceState);
+
         // Create an instance of GoogleAPIClient.
-        if (mGoogleApiClient == null) {
-            mGoogleApiClient = new GoogleApiClient.Builder(this)
-                    .addConnectionCallbacks(this)
-                    .addOnConnectionFailedListener(this)
-                    .addApi(LocationServices.API)
-                    .build();
+        buildGoogleApiClient();
+    }
+
+    protected synchronized void buildGoogleApiClient() {
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build();
+    }
+
+    private void updateValuesFromBundle(Bundle savedInstanceState) {
+        if (savedInstanceState != null) {
+            // Check savedInstanceState to see if the address was previously requested.
+            if (savedInstanceState.keySet().contains(ADDRESS_REQUESTED_KEY)) {
+                mAddressRequested = savedInstanceState.getBoolean(ADDRESS_REQUESTED_KEY);
+            }
+            // Check savedInstanceState to see if the currentLocation address string was previously found
+            // and stored in the Bundle. If it was found, display the address string in the UI.
+            if (savedInstanceState.keySet().contains(LOCATION_ADDRESS_KEY)) {
+                mAddressOutput = savedInstanceState.getString(LOCATION_ADDRESS_KEY);
+                displayAddressOutput();
+            }
         }
     }
 
+    private void setMapInteraction() {
+        if (mMap == null) {
+            return;
+        }
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude()), 16));
+        mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
+            @Override
+            public void onMapLongClick(LatLng latLng) {
+                mAddressRequested = true;
+                updateUIWidgets();
+                startIntentService(latLng);
+                updateMapUi(latLng);
+            }
+        });
+    }
 
-    /***/
+    private void updateMapUi(LatLng latLng) {
+        userSelectedLatLng = latLng;
+        fabConfirm.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onClick(View v) {
+        Intent backToProfileSelection = new Intent(this, CreationActivity.class);
+        if (userSelectedLatLng != null) {
+            if (!tvAddress.getText().toString().isEmpty()) {
+                backToProfileSelection.putExtra(KEY_ADDRESS, tvAddress.getText().toString());
+            }
+            backToProfileSelection.putExtra(KEY_LAT, userSelectedLatLng.latitude);
+            backToProfileSelection.putExtra(KEY_LNG, userSelectedLatLng.longitude);
+            startActivity(backToProfileSelection);
+            finish();
+        }
+    }
+
+    protected void startLocationUpdates() {
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
+    }
+
+    protected void stopLocationUpdates() {
+        LocationServices.FusedLocationApi.removeLocationUpdates(
+                mGoogleApiClient, this);
+    }
+
+    protected void createLocationRequest() {
+        mLocationRequest = new LocationRequest();
+        mLocationRequest.setInterval(10000);
+        mLocationRequest.setFastestInterval(5000);
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+    }
+
+    private void displayAddressOutput() {
+
+        tvAddress.setText(mAddressOutput);
+
+    }
+
+    protected void startIntentService(Location location) {
+        Intent intent = new Intent(this, FetchAddressIntentService.class);
+        intent.putExtra(FetchAddressIntentService.Constants.RECEIVER, mResultReceiver);
+        intent.putExtra(FetchAddressIntentService.Constants.LOCATION_DATA_EXTRA, location);
+        startService(intent);
+    }
+
+    private void startIntentService(LatLng latLng) {
+        Intent intent = new Intent(this, FetchAddressIntentService.class);
+        intent.putExtra(FetchAddressIntentService.Constants.RECEIVER, mResultReceiver);
+        intent.putExtra(FetchAddressIntentService.Constants.LOCATION_LATITUDE_EXTRA, latLng.latitude);
+        intent.putExtra(FetchAddressIntentService.Constants.LOCATION_LONGITUDE_EXTRA, latLng.longitude);
+        startService(intent);
+
+    }
+
+
+    private class AddressResultReceiver extends ResultReceiver {
+        public AddressResultReceiver(Handler handler) {
+            super(handler);
+        }
+
+        @Override
+        protected void onReceiveResult(int resultCode, Bundle resultData) {
+            mAddressOutput = resultData.getString(FetchAddressIntentService.Constants.RESULT_DATA_KEY);
+            displayAddressOutput();
+
+            // Show a toast message if an address was found.
+            if (resultCode == FetchAddressIntentService.Constants.SUCCESS_RESULT) {
+                Toast.makeText(MapsActivity.this, "address loaded", Toast.LENGTH_SHORT).show();
+            }
+            // Reset. Enable the Fetch Address button and stop showing the progress bar.
+            mAddressRequested = false;
+            updateUIWidgets();
+
+        }
+    }
+
+    private void updateUIWidgets() {
+        if (mAddressRequested) {
+            pbLoader.setVisibility(ProgressBar.VISIBLE);
+
+        } else {
+            pbLoader.setVisibility(ProgressBar.GONE);
+        }
+    }
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-
-        // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        Toast.makeText(this, "Map loaded", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-        // important code
+        Toast.makeText(this, "connected", Toast.LENGTH_SHORT).show();
         LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder().addLocationRequest(mLocationRequest);
         PendingResult<LocationSettingsResult> result = LocationServices.SettingsApi.checkLocationSettings(mGoogleApiClient, builder.build());
         result.setResultCallback(new ResultCallback<LocationSettingsResult>() {
@@ -96,8 +250,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 final LocationSettingsStates states = locationSettingsResult.getLocationSettingsStates();
                 switch (status.getStatusCode()) {
                     case LocationSettingsStatusCodes.SUCCESS:
-                        // All location settings are satisfied. The client can
-                        // initialize location requests here.
+                        // All currentLocation settings are satisfied. The client can
+                        // initialize currentLocation requests here.
+
                         break;
                     case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
                         // Location settings are not satisfied, but this can be fixed
@@ -115,21 +270,41 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
                         // Location settings are not satisfied. However, we have no way
                         // to fix the settings so we won't show the dialog.
+
                         break;
                 }
             }
         });
-        // location permission
-        createLocationRequest();
-        startLocationUpdates();
-    }
 
-    protected void startLocationUpdates() {
+        if (!Geocoder.isPresent()) {
+            Toast.makeText(this, R.string.no_geocoder_available, Toast.LENGTH_LONG).show();
+            return;
+        }
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
-        LocationServices.FusedLocationApi.requestLocationUpdates(
-                mGoogleApiClient, mLocationRequest, this);
+        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+        if (mLastLocation != null) {
+
+        }
+        //currentLocation reqeuest
+        createLocationRequest();
+        startLocationUpdates();
+
+        if (mAddressRequested) {
+            if (currentLocation != null)
+                startIntentService(currentLocation);
+        }
+        //allow user to use map and select Location
+        setMapInteraction();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
+            mGoogleApiClient.connect();
+        }
     }
 
     @Override
@@ -138,99 +313,53 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         stopLocationUpdates();
     }
 
-    protected void stopLocationUpdates() {
-        LocationServices.FusedLocationApi.removeLocationUpdates(
-                mGoogleApiClient, this);
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mGoogleApiClient.connect();
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
-            startLocationUpdates();
+    protected void onStop() {
+        super.onStop();
+        if (mGoogleApiClient.isConnected()) {
+            mGoogleApiClient.disconnect();
         }
     }
 
-
     @Override
     public void onConnectionSuspended(int i) {
-
+        mGoogleApiClient.connect();
     }
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
-    }
-
-    protected void onStart() {
-        mGoogleApiClient.connect();
-        super.onStart();
-    }
-
-    protected void onStop() {
-        mGoogleApiClient.disconnect();
-        super.onStop();
-    }
-
-    protected void createLocationRequest() {
-        mLocationRequest = new LocationRequest();
-        mLocationRequest.setInterval(10000);
-        mLocationRequest.setFastestInterval(5000);
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        Log.i("Location", "Connection failed: ConnectionResult.getErrorCode() = " + connectionResult.getErrorCode());
     }
 
     @Override
     public void onLocationChanged(Location location) {
-        this.location = location;
-        // call for address here
-        startIntentService();
+        this.currentLocation = location;//call for address here
     }
 
-    protected void startIntentService() {
-        Intent intent = new Intent(this, FetchAddressIntentService.class);
-        intent.putExtra(FetchAddressIntentService.Constants.RECEIVER, mResultReceiver);
-        intent.putExtra(FetchAddressIntentService.Constants.LOCATION_DATA_EXTRA, location);
-        startService(intent);
-    }
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        // Save whether the address has been requested.
+        savedInstanceState.putBoolean(ADDRESS_REQUESTED_KEY, mAddressRequested);
 
-    private class AddressResultReceiver extends ResultReceiver {
-        public AddressResultReceiver(Handler handler) {
-            super(handler);
-        }
-
-        @Override
-        protected void onReceiveResult(int resultCode, Bundle resultData) {
-
-            // Display the address string
-            // or an error message sent from the intent service.
-            mAddressOutput = resultData.getString(FetchAddressIntentService.Constants.RESULT_DATA_KEY);
-            displayAddressOutput();
-
-            // Show a toast message if an address was found.
-            if (resultCode == FetchAddressIntentService.Constants.SUCCESS_RESULT) {
-                //showToast(getString(R.string.address_found));
-                {
-                }
-            }
-        }
-    }
-
-    private void displayAddressOutput() {
-        // update your UI
-        tvAddress.setText(mAddressOutput);
-        // the end
-        // no one step left
-        // end return
+        // Save the address string.
+        savedInstanceState.putString(LOCATION_ADDRESS_KEY, mAddressOutput);
+        super.onSaveInstanceState(savedInstanceState);
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-       if (requestCode == REQUEST_LOCATION_PERMISSION ){
-           if (grantResults[0] == PackageManager.PERMISSION_GRANTED){
-               Toast.makeText(this,"permission granted",Toast.LENGTH_SHORT ).show();
-           }else {
-               finish();
-           }
-           }
-       }
+        if (requestCode == REQUEST_LOCATION_PERMISSION) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(this, "permission granted", Toast.LENGTH_SHORT).show();
+            } else {
+                finish();
+            }
+        }
     }
+}

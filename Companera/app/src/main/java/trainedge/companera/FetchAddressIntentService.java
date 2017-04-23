@@ -21,53 +21,66 @@ import java.util.Locale;
 
 public class FetchAddressIntentService extends IntentService {
 
-    public static final String TAG = "FetchAddressIntent";
-    private ResultReceiver mReceiver;
+    private static final String TAG = "FetchAddress";
+    private android.support.v4.os.ResultReceiver mReceiver;
+
 
     public FetchAddressIntentService() {
-        super("IntentService");
-
-    }
-
-    /**
-     * Creates an IntentService.  Invoked by your subclass's constructor.
-     *
-     * @param name Used to name the worker thread, important only for debugging.
-     */
-    public FetchAddressIntentService(String name) {
-        super(name);
+        super("AddressFetcher");
     }
 
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
-        String errorMessage = "location off please on the location service";
+        String errorMessage = "";
 
-        // Get the location passed to this service through an extra.
-        Location location = intent.getParcelableExtra(Constants.LOCATION_DATA_EXTRA);
+        mReceiver = intent.getParcelableExtra(Constants.RECEIVER);
+        // Check if receiver was properly registered.
+        if (mReceiver == null) {
+            Log.wtf(TAG, "No receiver received. There is nowhere to send the results.");
+            return;
+        }
+
         Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+
         List<Address> addresses = null;
 
+        // Get the location passed to this service through an extra.
         try {
-            addresses = geocoder.getFromLocation(
-                    location.getLatitude(),
-                    location.getLongitude(),
-                    // In this sample, get just a single address.
-                    1);
-        } catch (IOException ioException) {
-            // Catch network or other I/O problems.
-            errorMessage = getString(R.string.service_not_available);
-            Log.e(TAG, errorMessage, ioException);
-        } catch (IllegalArgumentException illegalArgumentException) {
-            // Catch invalid latitude or longitude values.
-            errorMessage = getString(R.string.invalid_lat_long_used);
-            Log.e(TAG, errorMessage + ". " +
-                    "Latitude = " + location.getLatitude() +
-                    ", Longitude = " +
-                    location.getLongitude(), illegalArgumentException);
+            Location location = intent.getParcelableExtra(Constants.LOCATION_DATA_EXTRA);
+            try {
+
+
+                addresses = geocoder.getFromLocation(
+                        location.getLatitude(),
+                        location.getLongitude(),
+                        // In this sample, get just a single address.
+                        1);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+                errorMessage = getString(R.string.service_not_available);
+                Log.e(TAG, errorMessage, e);
+            } catch (IllegalArgumentException e) {
+                // Catch invalid latitude or longitude values.
+                errorMessage = getString(R.string.invalid_lat_long_used);
+                Log.e(TAG, errorMessage + ". " + "Latitude = " + location.getLatitude() +
+                        ", Longitude = " + location.getLongitude(), e);
+
+            }
+        } catch (Exception e) {
+            Double lat = intent.getDoubleExtra(Constants.LOCATION_LATITUDE_EXTRA, 0);
+            Double lng = intent.getDoubleExtra(Constants.LOCATION_LONGITUDE_EXTRA, 0);
+
+            try {
+                addresses = geocoder.getFromLocation(lat, lng, 1);
+            } catch (IOException e1) {
+                e1.printStackTrace();
+                errorMessage = getString(R.string.service_not_available);
+            }
         }
 
         // Handle case where no address was found.
-        if (addresses == null || addresses.size()  == 0) {
+        if (addresses == null || addresses.size() == 0) {
             if (errorMessage.isEmpty()) {
                 errorMessage = getString(R.string.no_address_found);
                 Log.e(TAG, errorMessage);
@@ -79,7 +92,7 @@ public class FetchAddressIntentService extends IntentService {
 
             // Fetch the address lines using getAddressLine,
             // join them, and send them to the thread.
-            for(int i = 0; i <= address.getMaxAddressLineIndex(); i++) {
+            for (int i = 0; i <= address.getMaxAddressLineIndex(); i++) {
                 addressFragments.add(address.getAddressLine(i));
             }
             Log.i(TAG, getString(R.string.address_found));
@@ -87,21 +100,27 @@ public class FetchAddressIntentService extends IntentService {
                     TextUtils.join(System.getProperty("line.separator"),
                             addressFragments));
         }
+
+
     }
+
     private void deliverResultToReceiver(int resultCode, String message) {
         Bundle bundle = new Bundle();
         bundle.putString(Constants.RESULT_DATA_KEY, message);
         mReceiver.send(resultCode, bundle);
     }
+
     public final class Constants {
         public static final int SUCCESS_RESULT = 0;
         public static final int FAILURE_RESULT = 1;
-        public static final String PACKAGE_NAME = "trainedge.companera" ;
+        public static final String PACKAGE_NAME =
+                "trainedge.companera";
         public static final String RECEIVER = PACKAGE_NAME + ".RECEIVER";
         public static final String RESULT_DATA_KEY = PACKAGE_NAME +
                 ".RESULT_DATA_KEY";
         public static final String LOCATION_DATA_EXTRA = PACKAGE_NAME +
                 ".LOCATION_DATA_EXTRA";
-       // public static sharepref SharedPrefs;
+        public static final String LOCATION_LATITUDE_EXTRA = PACKAGE_NAME + ".latitude";
+        public static final String LOCATION_LONGITUDE_EXTRA = PACKAGE_NAME + ".longitude";
     }
 }

@@ -42,7 +42,7 @@
         </activity>
         <activity
             android:name=".Login_Activity"
-            android:label="COMPANERA"
+            android:label="LOGIN IN COMPA"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".Home_Activity"
@@ -55,13 +55,23 @@
 
         <activity
             android:name=".MapsActivity"
-            android:label="@string/title_activity_maps">
-
-        </activity>
+            android:label="@string/title_activity_maps"
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <service
             android:name=".FetchAddressIntentService"
-            android:exported="false"></service>
+            android:exported="false" />
+
+        <activity
+            android:name=".CreationActivity"
+            android:label="Task"
+            android:parentActivityName=".Home_Activity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="trainedge.companera.Home_Activity" />
+        </activity>
+        <activity android:name=".Profile_Activity" />
     </application>
 
 </manifest>
