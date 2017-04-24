@@ -9,7 +9,7 @@
 
     <color name="statusBarColor">#03560f</color>
     <color name="mainBackground">#046c12</color>
-    <color name="location_list_item_background">#059b05</color>
+    <color name="location_list_item_background">#4f3e0a</color>
     <color name="location_list_fragment_background">#058105</color>
     <color name="separator">#f0577457</color>
 </resources>

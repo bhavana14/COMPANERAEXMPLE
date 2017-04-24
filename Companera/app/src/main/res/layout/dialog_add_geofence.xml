@@ -1,0 +1,59 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/location_list_item_background"
+    android:minWidth="280dp"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tView1"
+        style="TextView.header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="16dp"
+        android:text="Add A Geofence"
+        android:textColor="@android:color/white"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+    <EditText
+        android:id="@+id/fragment_add_geofence_name"
+        style="EditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Name"
+        android:textColor="@android:color/white" />
+
+    <EditText
+        android:id="@+id/fragment_add_geofence_latitude"
+        style="EditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:digits="0123456789.-"
+        android:hint="Latitude"
+        android:inputType="number"
+        android:textColor="@android:color/white" />
+
+
+    <EditText
+        android:id="@+id/fragment_add_geofence_longitude"
+        style="EditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:digits="0123456789.-"
+        android:hint="Longitude"
+        android:inputType="number"
+        android:textColor="@android:color/white" />
+
+    <EditText
+        android:id="@+id/fragment_add_geofence_radius"
+        style="EditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:digits="0123456789."
+        android:hint="Radius"
+        android:inputType="number"
+        android:textColor="@android:color/white" />
+
+</LinearLayout>

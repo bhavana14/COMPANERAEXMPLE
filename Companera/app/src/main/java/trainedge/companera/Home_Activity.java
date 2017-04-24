@@ -127,6 +127,8 @@ public class Home_Activity extends AppCompatActivity
                 startActivity(getlocation);
                 break;
             case R.id.sett_ings:
+                Intent geofence = new Intent(Home_Activity.this, AllGeofencesActivity.class);
+                startActivity(geofence);
                 break;
             case R.id.sett_List:
                 break;
