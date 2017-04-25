@@ -55,5 +55,6 @@
     <string name="invitation_cta">friends</string>
     <string name="title_activity_feedback_">Feedback</string>
     <string name="title_activity_all_geofences">AllGeofencesActivity</string>
+    <string name="title_activity_feedback">FeedbackActivity</string>
 
 </resources>

@@ -71,7 +71,7 @@ public class Home_Activity extends AppCompatActivity
                 }
             }
         };
-        //App Sharing code
+        //App invite code
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .enableAutoManage(this, this)
                 .addApi(Auth.GOOGLE_SIGN_IN_API)
@@ -133,9 +133,17 @@ public class Home_Activity extends AppCompatActivity
             case R.id.sett_List:
                 break;
             case R.id.nav_invite:
-                //// TODO: shareApp
+                //// TODO: invite friends
                 sendInvitation();
                 break;
+            case R.id.nav_share:
+                //// share
+                Intent share = new Intent(Intent.ACTION_SEND);
+                share.setType("text/plain");
+                share.putExtra(Intent.EXTRA_SUBJECT, "Scoop");
+
+                share.putExtra(Intent.EXTRA_TEXT, "Your friend has invited you to join the app./n To join click the link");
+                startActivity(Intent.createChooser(share, "Share via..."));
             case R.id.nav_about:
                 break;
             case R.id.nav_feedback:

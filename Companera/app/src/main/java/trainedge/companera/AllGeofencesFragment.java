@@ -171,7 +171,7 @@ public class AllGeofencesFragment extends Fragment implements AddGeofenceFragmen
             container = (ViewGroup) v.findViewById(R.id.fragment_all_geofences_container);
             emptyState = (ViewGroup) v.findViewById(R.id.fragment_all_geofences_emptyState);
             geofenceRecyclerView = (RecyclerView) v.findViewById(R.id.fragment_all_geofences_geofenceRecyclerView);
-            actionButton = (ActionButton) v.findViewById(R.id.fragment_all_geofences_actionButton);
+          //  actionButton = (ActionButton) v.findViewById(R.id.fragment_all_geofences_actionButton);
 
             actionButton.setImageResource(R.drawable.fab_plus_icon);
         }
