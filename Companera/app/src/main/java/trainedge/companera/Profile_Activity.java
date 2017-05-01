@@ -45,6 +45,7 @@ public class Profile_Activity extends Activity {
 
         }
         email.setText(user.getEmail());
+        name.setText(user.getDisplayName());
 
         //Loading image from below url into imageView
         Picasso.with(this)

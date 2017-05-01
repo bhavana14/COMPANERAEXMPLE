@@ -100,6 +100,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         // Create an instance of GoogleAPIClient.
         buildGoogleApiClient();
+        Bundle bundle = new Bundle();
+        bundle.putString("edttext", "From Activity");
+        // set Fragmentclass Arguments
+        AllGeofencesFragment fragobj = new AllGeofencesFragment();
+        fragobj.setArguments(bundle);
     }
 
     protected synchronized void buildGoogleApiClient() {

@@ -38,5 +38,7 @@ dependencies {
     compile 'com.github.shell-software:fab:1.0.5'
     compile 'com.google.android.gms:play-services-appinvite:10.0.1'
     compile 'com.squareup.picasso:picasso:2.5.2'
+    compile 'com.firebase:geofire-android:2.1.1'
+    compile 'com.firebase:geofire-java:2.1.1'
 }
 apply plugin: 'com.google.gms.google-services'

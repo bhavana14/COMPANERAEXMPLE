@@ -43,7 +43,7 @@
         <activity
             android:name=".Login_Activity"
             android:label="LOGIN"
-            android:theme="@style/AppTheme"/>
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".Home_Activity"
             android:label="Home"
@@ -56,7 +56,7 @@
         <activity
             android:name=".MapsActivity"
             android:label="@string/title_activity_maps"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <service
             android:name=".FetchAddressIntentService"
@@ -82,9 +82,9 @@
                 android:value="trainedge.companera.Home_Activity" />
         </activity>
         <activity
-            android:name=".FeedbackActivity"
+            android:name=".Feedback"
             android:label="@string/title_activity_feedback"
-            android:theme="@style/AppTheme.AppBarOverlay"></activity>
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>
