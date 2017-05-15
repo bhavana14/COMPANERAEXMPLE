@@ -15,6 +15,8 @@ public class NamedGeofence implements Comparable {
     public double latitude;
     public double longitude;
     public float radius;
+    public String address;
+    public String ringtone;
 
     // end region
 
@@ -25,10 +27,12 @@ public class NamedGeofence implements Comparable {
         return new Geofence.Builder()
                 .setRequestId(id)
                 .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER)
+                .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_EXIT)
                 .setCircularRegion(latitude, longitude, radius)
                 .setExpirationDuration(Geofence.NEVER_EXPIRE)
                 .build();
     }
+
 
     // endregion
 
@@ -42,4 +46,3 @@ public class NamedGeofence implements Comparable {
 
     // endregion
 }
-

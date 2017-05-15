@@ -7,6 +7,7 @@ android {
         applicationId "trainedge.companera"
         minSdkVersion 19
         targetSdkVersion 25
+        multiDexEnabled true
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -39,6 +40,10 @@ dependencies {
     compile 'com.google.android.gms:play-services-appinvite:10.0.1'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.firebase:geofire-android:2.1.1'
-    compile 'com.firebase:geofire-java:2.1.1'
+    compile 'com.android.support:multidex:1.0.1'
+    compile 'com.google.firebase:firebase-database:10.0.1'
+    compile 'com.jakewharton:butterknife:8.4.0'
+    compile 'com.github.florent37:viewanimator:1.0.5'
+    compile 'com.intuit.sdp:sdp-android:1.0.4'
 }
 apply plugin: 'com.google.gms.google-services'

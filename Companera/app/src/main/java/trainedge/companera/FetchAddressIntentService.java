@@ -7,22 +7,28 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
-import android.os.ResultReceiver;
 import android.support.annotation.Nullable;
+import android.support.v4.os.ResultReceiver;
 import android.text.TextUtils;
 import android.util.Log;
 
 import java.io.IOException;
-import java.net.DatagramSocket;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-
+/**
+ * An {@link IntentService} subclass for handling asynchronous task requests in
+ * a service on a separate handler thread.
+ * <p>
+ * TODO: Customize class - update intent actions, extra parameters and static
+ * helper methods.
+ */
 public class FetchAddressIntentService extends IntentService {
 
+
     private static final String TAG = "FetchAddress";
-    private android.support.v4.os.ResultReceiver mReceiver;
+    private ResultReceiver mReceiver;
 
 
     public FetchAddressIntentService() {
@@ -114,7 +120,7 @@ public class FetchAddressIntentService extends IntentService {
         public static final int SUCCESS_RESULT = 0;
         public static final int FAILURE_RESULT = 1;
         public static final String PACKAGE_NAME =
-                "trainedge.companera";
+                "trainedge.lbprofiler";
         public static final String RECEIVER = PACKAGE_NAME + ".RECEIVER";
         public static final String RESULT_DATA_KEY = PACKAGE_NAME +
                 ".RESULT_DATA_KEY";
@@ -123,4 +129,5 @@ public class FetchAddressIntentService extends IntentService {
         public static final String LOCATION_LATITUDE_EXTRA = PACKAGE_NAME + ".latitude";
         public static final String LOCATION_LONGITUDE_EXTRA = PACKAGE_NAME + ".longitude";
     }
+
 }

@@ -1,8 +1,13 @@
 package trainedge.companera;
 
 
+import android.*;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.ClipData;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapShader;
 import android.graphics.Canvas;
@@ -14,6 +19,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -24,8 +32,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.animation.OvershootInterpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.facebook.AccessToken;
 import com.facebook.login.LoginManager;
@@ -36,9 +46,18 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Transformation;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.facebook.FacebookSdk.getApplicationContext;
 import static trainedge.companera.R.id.nav_SignOut;
 
 public class Home_Activity extends AppCompatActivity
@@ -46,11 +65,21 @@ public class Home_Activity extends AppCompatActivity
 
     public static final String TAG = "Share App";
     public static final int REQUEST_INVITE = 123;
+    private static final int REQUEST_LOCATION_PERMISSION = 325;
     private MenuItem nav_signOut;
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private GoogleApiClient mGoogleApiClient;
     private View headerView;
+    public static final int INVITATION_MESSAGE = R.string.invitation_message;
+    String uid;
+    DatabaseReference profilesRef;
+    GeofenceService myService;
+    boolean isBound = false;
+    List<ProfileModel> profileList;
+    private Context mContext;
+    private PendingIntent pIntent;
+    private AlarmManager alarm;
 
     @RequiresApi(api = Build.VERSION_CODES.GINGERBREAD)
     @Override
@@ -84,15 +113,98 @@ public class Home_Activity extends AppCompatActivity
                 }
             }
         };
-
-
         //App invite code
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .enableAutoManage(this, this)
                 .addApi(Auth.GOOGLE_SIGN_IN_API)
                 .addApi(AppInvite.API)
                 .build();
+        // lbprofiler
 
+        handlePermissions();
+        Intent intent = new Intent(this, GeofenceService.class);
+        startService(new Intent(this, GeofenceService.class));
+
+        setDatabase();
+        scheduleAlarm();
+    }
+
+    private void setDatabase() {
+        uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        profilesRef = FirebaseDatabase.getInstance().getReference("profiles").child(uid);
+
+
+        //creating blank list in memory
+        profileList = new ArrayList<>();
+
+        //recyclerview obj
+
+        final RecyclerView rvProfileList = (RecyclerView) findViewById(R.id.rvProfiles);
+        LinearLayoutManager manager = new LinearLayoutManager(this);
+        //passing layout manager in recyclerview
+        rvProfileList.setLayoutManager(manager);
+        final ProfileAdapter adapter = new ProfileAdapter(this, profileList);
+        rvProfileList.setAdapter(adapter);
+        //SlideInUpAnimator animator = new SlideInUpAnimator(new OvershootInterpolator(1f));
+       // rvProfileList.setItemAnimator(animator);
+       // rvProfileList.getItemAnimator().setAddDuration(1000);
+        //setup listener
+        //using anonymous class
+
+        profilesRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                //data is in dataSnapshot obj
+                int position = 0;
+                profileList.clear();
+                if (dataSnapshot.hasChildren()) { //tab
+
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) { // datasnapshot.getChildren().iter
+                        if (snapshot.getKey().equals("geofire")) {
+                            continue;
+                        }
+                        profileList.add(new ProfileModel(snapshot));
+                        adapter.notifyItemInserted(position);
+                        position++;
+                    }
+
+                } else {
+                    Toast.makeText(Home_Activity.this, "No Profiles", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Toast.makeText(Home_Activity.this, databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
+
+    private void handlePermissions() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
+                    ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
+                    ActivityCompat.checkSelfPermission(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||
+                    ActivityCompat.checkSelfPermission(this, android.Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE, android.Manifest.permission.READ_EXTERNAL_STORAGE, android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION}, REQUEST_LOCATION_PERMISSION);
+            } else {
+                Toast.makeText(this, "permission granted", Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            //Toast.makeText(this, "Not Marshmellow", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == REQUEST_LOCATION_PERMISSION) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(this, "permission granted", Toast.LENGTH_SHORT).show();
+            } else {
+                finish();
+            }
+        }
     }
 
     @Override
@@ -142,8 +254,8 @@ public class Home_Activity extends AppCompatActivity
                 startActivity(getlocation);
                 break;
             case R.id.sett_ings:
-                Intent geofence = new Intent(Home_Activity.this, AllGeofencesActivity.class);
-                startActivity(geofence);
+               Intent i=new Intent(this,ProfileModification.class);
+                startActivity(i);
                 break;
             case R.id.sett_List:
                 break;
@@ -160,6 +272,8 @@ public class Home_Activity extends AppCompatActivity
                 share.putExtra(Intent.EXTRA_TEXT, "Your friend has invited you to join the app./n To join click the link");
                 startActivity(Intent.createChooser(share, "Share via..."));
             case R.id.nav_about:
+                Intent about = new Intent(Home_Activity.this,AboutActivity.class);
+                startActivity(about);
                 break;
             case R.id.nav_feedback:
                Intent feedback = new Intent(Home_Activity.this,Feedback.class);
@@ -291,4 +405,19 @@ public class Home_Activity extends AppCompatActivity
             mGoogleApiClient.disconnect();
         }
     }
+            public void scheduleAlarm() {
+                // Construct an intent that will execute the AlarmReceiver
+                Intent intent = new Intent(getApplicationContext(), Timerservice.class);
+                // Create a PendingIntent to be triggered when the alarm goes off
+                pIntent = PendingIntent.getBroadcast(this, Timerservice.REQUEST_CODE,
+                        intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                // Setup periodic alarm every 5 seconds
+                long firstMillis = System.currentTimeMillis(); // alarm is set right away
+                alarm = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
+                // First parameter is the type: ELAPSED_REALTIME, ELAPSED_REALTIME_WAKEUP, RTC_WAKEUP
+                // Interval can be INTERVAL_FIFTEEN_MINUTES, INTERVAL_HALF_HOUR, INTERVAL_HOUR, INTERVAL_DAY
+                alarm.setInexactRepeating(AlarmManager.RTC_WAKEUP, firstMillis,
+                        60000, pIntent);
+
+            }
 }

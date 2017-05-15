@@ -1,58 +1,62 @@
 package trainedge.companera;
 
 import android.content.Intent;
-import android.content.IntentSender;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Geocoder;
 import android.location.Location;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.os.ResultReceiver;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.firebase.geofire.GeoFire;
+import com.firebase.geofire.GeoLocation;
+import com.firebase.geofire.GeoQuery;
+import com.firebase.geofire.GeoQueryEventListener;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.PendingResult;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
-import com.google.android.gms.location.LocationSettingsResult;
-import com.google.android.gms.location.LocationSettingsStates;
-import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
-import static trainedge.companera.FetchAddressIntentService.Constants.PACKAGE_NAME;
+import trainedge.companera.FetchAddressIntentService;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, View.OnClickListener {
+
     private static final int REQUEST_LOCATION_PERMISSION = 2312;
     private static final int REQUEST_CHECK_SETTINGS = 9389;
-    public static final String KEY_ADDRESS = PACKAGE_NAME + ".address";
-    public static final String KEY_LAT = PACKAGE_NAME + ".latitude";
-    public static final String KEY_LNG = PACKAGE_NAME + ".longitude";
     private GoogleMap mMap;
     private GoogleApiClient mGoogleApiClient;
     private LocationRequest mLocationRequest;
     private AddressResultReceiver mResultReceiver;
     private Location currentLocation;
     private TextView tvAddress;
+    String address;
+    private static final String PACKAGE_NAME = "trainedge.lbprofiler";
+    public static final String KEY_ADDRESS = PACKAGE_NAME + ".address";
+    public static final String KEY_LAT = PACKAGE_NAME + ".latitude";
+    public static final String KEY_LNG = PACKAGE_NAME + ".longitude";
 
     protected Location mLastLocation;
 
@@ -62,8 +66,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected boolean mAddressRequested;
     protected String mAddressOutput;
     private ProgressBar pbLoader;
-    private LatLng userSelectedLatLng;
-    private FloatingActionButton fabConfirm;
+
+    private LatLng userLocationSelected;
+    public Button btnOk;
 
 
     @Override
@@ -72,40 +77,25 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         setContentView(R.layout.activity_maps);
         tvAddress = (TextView) findViewById(R.id.tvAddress);
         pbLoader = (ProgressBar) findViewById(R.id.pbLoader);
-        fabConfirm = (FloatingActionButton) findViewById(R.id.fabConfirm);
-        fabConfirm.setOnClickListener(this);
         pbLoader.setVisibility(View.GONE);
-        fabConfirm.setVisibility(View.GONE);
+        btnOk = (Button) findViewById(R.id.btnOk);
+        btnOk.setOnClickListener(this);
+        buildGoogleApiClient();
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
         mResultReceiver = new AddressResultReceiver(new Handler());
         //only for m or above
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION}, REQUEST_LOCATION_PERMISSION);
-                return;
-            } else {
-                Toast.makeText(this, "permission granted", Toast.LENGTH_SHORT).show();
-            }
-        } else {
-            Toast.makeText(this, "Not Marshmellow", Toast.LENGTH_SHORT).show();
-        }
 
         mAddressRequested = true;
         mAddressOutput = "";
         updateValuesFromBundle(savedInstanceState);
 
         // Create an instance of GoogleAPIClient.
-        buildGoogleApiClient();
-        Bundle bundle = new Bundle();
-        bundle.putString("edttext", "From Activity");
-        // set Fragmentclass Arguments
-        AllGeofencesFragment fragobj = new AllGeofencesFragment();
-        fragobj.setArguments(bundle);
+
     }
+
+
 
     protected synchronized void buildGoogleApiClient() {
         mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -134,7 +124,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if (mMap == null) {
             return;
         }
-            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude()), 16));
+        LatLng latLng = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 16));
         mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
             @Override
             public void onMapLongClick(LatLng latLng) {
@@ -144,26 +135,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 updateMapUi(latLng);
             }
         });
+        CircleOptions circleOptions = new CircleOptions();
+        circleOptions.center(latLng);
+        circleOptions.radius(200);
+        circleOptions.strokeColor(Color.argb(100, 055, 55, 40));
+        circleOptions.fillColor(Color.argb(100, 255, 255, 0));
+        mMap.addCircle(circleOptions);
     }
 
     private void updateMapUi(LatLng latLng) {
-        userSelectedLatLng = latLng;
-        fabConfirm.setVisibility(View.VISIBLE);
+
+        userLocationSelected = latLng;
+
     }
 
-    @Override
-    public void onClick(View v) {
-        Intent backToProfileSelection = new Intent(this, CreationActivity.class);
-        if (userSelectedLatLng != null) {
-            if (!tvAddress.getText().toString().isEmpty()) {
-                backToProfileSelection.putExtra(KEY_ADDRESS, tvAddress.getText().toString());
-            }
-            backToProfileSelection.putExtra(KEY_LAT, userSelectedLatLng.latitude);
-            backToProfileSelection.putExtra(KEY_LNG, userSelectedLatLng.longitude);
-            startActivity(backToProfileSelection);
-            finish();
-        }
-    }
 
     protected void startLocationUpdates() {
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -173,8 +158,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     protected void stopLocationUpdates() {
-        LocationServices.FusedLocationApi.removeLocationUpdates(
-                mGoogleApiClient, this);
+        if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
+            LocationServices.FusedLocationApi.removeLocationUpdates(
+                    mGoogleApiClient, this);
+        }
     }
 
     protected void createLocationRequest() {
@@ -203,6 +190,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         intent.putExtra(FetchAddressIntentService.Constants.LOCATION_LATITUDE_EXTRA, latLng.latitude);
         intent.putExtra(FetchAddressIntentService.Constants.LOCATION_LONGITUDE_EXTRA, latLng.longitude);
         startService(intent);
+
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (userLocationSelected != null) {
+            address = tvAddress.getText().toString();
+
+            Intent i = new Intent(MapsActivity.this, ProfileCreation.class);
+            i.putExtra("trainedge.companera.address", address);
+            i.putExtra("trainedge.companera.latitude", userLocationSelected.latitude);
+            i.putExtra("trainedge.companera.longitude", userLocationSelected.longitude);
+            startActivity(i);
+        } else {
+            Toast.makeText(this, "Location is not selected, PLease Long Press on Desired Location", Toast.LENGTH_LONG).show();
+        }
 
     }
 
@@ -247,50 +250,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onConnected(@Nullable Bundle bundle) {
         Toast.makeText(this, "connected", Toast.LENGTH_SHORT).show();
         LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder().addLocationRequest(mLocationRequest);
-        PendingResult<LocationSettingsResult> result = LocationServices.SettingsApi.checkLocationSettings(mGoogleApiClient, builder.build());
-        result.setResultCallback(new ResultCallback<LocationSettingsResult>() {
-            @Override
-            public void onResult(@NonNull LocationSettingsResult locationSettingsResult) {
-                final Status status = locationSettingsResult.getStatus();
-                final LocationSettingsStates states = locationSettingsResult.getLocationSettingsStates();
-                switch (status.getStatusCode()) {
-                    case LocationSettingsStatusCodes.SUCCESS:
-                        // All currentLocation settings are satisfied. The client can
-                        // initialize currentLocation requests here.
-
-                        break;
-                    case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
-                        // Location settings are not satisfied, but this can be fixed
-                        // by showing the user a dialog.
-                        try {
-                            // Show the dialog by calling startResolutionForResult(),
-                            // and check the result in onActivityResult().
-                            status.startResolutionForResult(
-                                    MapsActivity.this,
-                                    REQUEST_CHECK_SETTINGS);
-                        } catch (IntentSender.SendIntentException e) {
-                            // Ignore the error.
-                        }
-                        break;
-                    case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
-                        // Location settings are not satisfied. However, we have no way
-                        // to fix the settings so we won't show the dialog.
-
-                        break;
-                }
-            }
-        });
 
         if (!Geocoder.isPresent()) {
             Toast.makeText(this, R.string.no_geocoder_available, Toast.LENGTH_LONG).show();
             return;
         }
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return;
+            //return;
         }
         mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
         if (mLastLocation != null) {
+            setMapInteraction();
+        } else {
 
+            Toast.makeText(this, "Location Not Found", Toast.LENGTH_SHORT).show();
         }
         //currentLocation reqeuest
         createLocationRequest();
@@ -301,7 +274,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 startIntentService(currentLocation);
         }
         //allow user to use map and select Location
-        setMapInteraction();
+
     }
 
     @Override
@@ -345,6 +318,39 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onLocationChanged(Location location) {
         this.currentLocation = location;//call for address here
+        final String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("geofire").child(uid);
+        GeoFire geoFire = new GeoFire(ref);
+        GeoQuery geoQuery = geoFire.queryAtLocation(new GeoLocation(location.getLatitude(), location.getLongitude()), 0.5);
+        geoQuery.addGeoQueryEventListener(new GeoQueryEventListener() {
+            @Override
+            public void onKeyEntered(String key, GeoLocation location) {
+                ProfileGeofenceNotification.notify(MapsActivity.this, "sound profile updated", 0);
+                SoundProfileManager spm = new SoundProfileManager(MapsActivity.this);
+                spm.changeSoundProfile(MapsActivity.this, key, location);
+            }
+
+            @Override
+            public void onKeyExited(String key) {
+
+                System.out.println(String.format("Key %s is no longer in the search area", key));
+            }
+
+            @Override
+            public void onKeyMoved(String key, GeoLocation location) {
+                System.out.println(String.format("Key %s moved within the search area to [%f,%f]", key, location.latitude, location.longitude));
+            }
+
+            @Override
+            public void onGeoQueryReady() {
+                System.out.println("All initial data has been loaded and events have been fired!");
+            }
+
+            @Override
+            public void onGeoQueryError(DatabaseError error) {
+                System.err.println("There was an error with this query: " + error);
+            }
+        });
     }
 
     @Override
@@ -357,14 +363,4 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         super.onSaveInstanceState(savedInstanceState);
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (requestCode == REQUEST_LOCATION_PERMISSION) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(this, "permission granted", Toast.LENGTH_SHORT).show();
-            } else {
-                finish();
-            }
-        }
-    }
 }

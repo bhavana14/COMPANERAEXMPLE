@@ -12,8 +12,8 @@
     <string name="title_activity_settings">SettingsActivity</string>
     <string name="title_activity_about">AboutActivity</string>
     <string name="large_text">
-       Companera is an android app.It is an automatic location based profile manager app.
-        This application will automatically change your profile mode as per your temporal and spatial variation of locations.
+       Companera is an android app.It is an automatic location based profile manager app.Once you set your sound profile as per your location
+        then next time this app will automatically change your profile mode as per your temporal and spatial variation of locations.
     </string>
     <string name="title_activity_about_">About_Activity</string>
     <string name="title_activity_about_scrolling">AboutScrollingActivity</string>
@@ -56,5 +56,13 @@
     <string name="title_activity_feedback_">Feedback</string>
     <string name="title_activity_all_geofences">AllGeofencesActivity</string>
     <string name="title_activity_feedback">FeedbackActivity</string>
+    <string name="title_activity_scrolling">ScrollingActivity</string>
+    <string name="title_activity_alert_">Alert_Activity</string>
+    <string name="title_activity_all_geofence_fregment">AllGeofenceFregment</string>
+    <string name="title_activity_view_profile">ViewProfileActivity</string>
+    <string name="task_geofence_notification_title_template" />
+    <string name="task_geofence_notification_placeholder_text_template" />
+    <string name="action_share" />
+    <string name="action_reply" />
 
 </resources>

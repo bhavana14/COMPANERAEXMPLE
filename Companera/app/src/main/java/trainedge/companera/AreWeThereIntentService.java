@@ -7,6 +7,8 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
+import android.speech.tts.TextToSpeech;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
@@ -16,9 +18,16 @@ import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
-public class AreWeThereIntentService extends IntentService {
+import trainedge.companera.AllGeofencesActivity;
+import trainedge.companera.Constants;
+import trainedge.companera.NamedGeofence;
+import trainedge.companera.ProfileGeofenceNotification;
+import trainedge.companera.R;
+
+public class AreWeThereIntentService extends IntentService implements TextToSpeech.OnInitListener {
 
     // region Properties
 
@@ -26,6 +35,7 @@ public class AreWeThereIntentService extends IntentService {
 
     private SharedPreferences prefs;
     private Gson gson;
+    private TextToSpeech engine;
 
     // endregion
 
@@ -101,7 +111,18 @@ public class AreWeThereIntentService extends IntentService {
                     .build();
             notificationManager.notify(0, notification);
 
+
+
+
+            Context context = null;
+            engine = new TextToSpeech(context, this);
+            ProfileGeofenceNotification.notify(getApplicationContext(), "You have reached your destination, ", 0);
+            initTTS();
         }
+    }
+
+    private void initTTS() {
+
     }
 
     private void onError(int i) {
@@ -109,5 +130,18 @@ public class AreWeThereIntentService extends IntentService {
     }
 
     // endregion
+
+    @Override
+    public void onInit(int status) {
+        if (status == TextToSpeech.SUCCESS) {
+            engine.setLanguage(Locale.ENGLISH);
+            CharSequence msg = null;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                engine.speak("you have reached your destination", TextToSpeech.QUEUE_FLUSH, null, null);
+            } else {
+                engine.speak(String.valueOf("you have reached your destination"), TextToSpeech.QUEUE_FLUSH, null);
+            }
+        }
+    }
 }
 

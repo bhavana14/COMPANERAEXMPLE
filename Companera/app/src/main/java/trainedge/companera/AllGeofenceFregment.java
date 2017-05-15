@@ -2,8 +2,11 @@ package trainedge.companera;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -12,13 +15,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.software.shell.fab.ActionButton;
-
 import java.util.ArrayList;
 import java.util.List;
 
-public class AllGeofencesFragment extends Fragment implements AddGeofenceFragment.AddGeofenceFragmentListener {
-
+import static trainedge.companera.MapsActivity.KEY_ADDRESS;
+import static trainedge.companera.MapsActivity.KEY_LAT;
+import static trainedge.companera.MapsActivity.KEY_LNG;
+public class AllGeofenceFregment extends Fragment implements AddGeofenceFragment.AddGeofenceFragmentListener {
+    public static final int REQUEST_MAP_CODE = 44;
     // region Properties
 
     private ViewHolder viewHolder;
@@ -37,6 +41,7 @@ public class AllGeofencesFragment extends Fragment implements AddGeofenceFragmen
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+
     }
 
     @Override
@@ -44,6 +49,8 @@ public class AllGeofencesFragment extends Fragment implements AddGeofenceFragmen
         View view = inflater.inflate(R.layout.fragment_all_geofences, container, false);
         viewHolder = new ViewHolder();
         return view;
+
+
     }
 
     @Override
@@ -71,16 +78,33 @@ public class AllGeofencesFragment extends Fragment implements AddGeofenceFragmen
         viewHolder.actionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AddGeofenceFragment dialogFragment = new AddGeofenceFragment();
-                dialogFragment.setListener(AllGeofencesFragment.this);
-                dialogFragment.show(getActivity().getSupportFragmentManager(), "AddGeofenceFragment");
+                Intent intent = new Intent(getContext(), MapsActivity.class);
+                startActivityForResult(intent, REQUEST_MAP_CODE);
             }
         });
-
         refresh();
     }
 
     @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_MAP_CODE) {
+            if (resultCode == AppCompatActivity.RESULT_OK) {
+                Bundle extras = data.getExtras();
+                String address = extras.getString(KEY_ADDRESS);
+                double lat = extras.getDouble(KEY_LAT);
+                double lng = extras.getDouble(KEY_LNG);
+                loadTaskFragment(address,lat,lng);
+            }
+        }
+    }
+
+    private void loadTaskFragment(String address, double lat, double lng) {
+        AddGeofenceFragment dialogFragment = AddGeofenceFragment.newInstance(address,lat,lng);
+        dialogFragment.setListener(AllGeofenceFregment.this);
+        dialogFragment.show(getActivity().getSupportFragmentManager(), "AddGeofenceFragment");
+    }
+
+    /*@Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_delete_all) {
@@ -102,7 +126,7 @@ public class AllGeofencesFragment extends Fragment implements AddGeofenceFragmen
         }
 
         return super.onOptionsItemSelected(item);
-    }
+    }*/
 
     // endregion
 
@@ -165,18 +189,15 @@ public class AllGeofencesFragment extends Fragment implements AddGeofenceFragmen
         ViewGroup container;
         ViewGroup emptyState;
         RecyclerView geofenceRecyclerView;
-        ActionButton actionButton;
+        FloatingActionButton actionButton;
 
         public void populate(View v) {
             container = (ViewGroup) v.findViewById(R.id.fragment_all_geofences_container);
             emptyState = (ViewGroup) v.findViewById(R.id.fragment_all_geofences_emptyState);
             geofenceRecyclerView = (RecyclerView) v.findViewById(R.id.fragment_all_geofences_geofenceRecyclerView);
-          //  actionButton = (ActionButton) v.findViewById(R.id.fragment_all_geofences_actionButton);
-
-            actionButton.setImageResource(R.drawable.fab_plus_icon);
+            actionButton = (FloatingActionButton) v.findViewById(R.id.fragment_all_geofences_actionButton);
         }
     }
 
     // endregion
 }
-

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="listitem_geofence" type="id" />
+    <item name="fragment_add_geofence_date" type="id" />
+    <item name="add_geofence_notification" type="id" />
+    <item name="add_geofence_address" type="id" />
+    <item name="btnOk" type="id" />
+    <item name="rvProfiles" type="id" />
+</resources>

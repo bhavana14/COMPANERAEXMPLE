@@ -1,4 +1,5 @@
 package trainedge.companera;
+
 public class Constants {
 
     public static class Geometry {
@@ -15,4 +16,5 @@ public class Constants {
     }
 
 }
+
 
