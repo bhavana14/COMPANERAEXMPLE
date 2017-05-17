@@ -114,6 +114,7 @@ public class GeofenceService extends Service implements GoogleApiClient.Connecti
         mCurrentLocation = location;//call for address here
         final String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("profiles").child(uid).child("geofire");
+
         GeoFire geoFire = new GeoFire(ref);
         GeoQuery geoQuery = geoFire.queryAtLocation(new GeoLocation(location.getLatitude(), location.getLongitude()), 0.5);
 
@@ -137,7 +138,7 @@ public class GeofenceService extends Service implements GoogleApiClient.Connecti
             @Override
             public void onGeoQueryReady() {
                 System.out.println("All initial data has been loaded and events have been fired!");
-                //Toast.makeText(GeofenceService.this, "service ready", Toast.LENGTH_SHORT).show();
+                Toast.makeText(GeofenceService.this, "service ready", Toast.LENGTH_SHORT).show();
             }
 
             @Override

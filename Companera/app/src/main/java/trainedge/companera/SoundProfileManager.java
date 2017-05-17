@@ -4,6 +4,7 @@ import android.content.Context;
 import android.media.AudioManager;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.text.format.DateUtils;
 import android.widget.Toast;
 
 import com.firebase.geofire.GeoLocation;
@@ -14,19 +15,26 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import trainedge.companera.ProfileGeofenceNotification;
 
 
 public class SoundProfileManager {
 
+    private int count;
     Context context;
     private ProfileModel profileModel;
 
     public SoundProfileManager(Context context) {
+
+        count = 0;
         this.context = context;
     }
 
-    public void changeSoundProfile(final Context context, String key, GeoLocation location) {
+    public void changeSoundProfile(final Context context, final String key, GeoLocation location) {
         String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
         final DatabaseReference profilesRef = FirebaseDatabase.getInstance().getReference("profiles").child(uid).child(key);
         Toast.makeText(this.context, "key= " + key, Toast.LENGTH_SHORT).show();
@@ -36,17 +44,38 @@ public class SoundProfileManager {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.hasChildren()) {
-
+                    String savedKey = context.getSharedPreferences("notifier_pref", Context.MODE_PRIVATE).getString("name", "");
                     boolean state = dataSnapshot.child("state").getValue(Boolean.class);
-                    if (!state) {
-                        ProfileGeofenceNotification.notify(context, "sound profile updated", 0);
-                        dataSnapshot.getRef().child("state").setValue(true);
-                        profileModel = new ProfileModel(dataSnapshot);
-                        updateSoundProfile(profileModel);
+                    String date = dataSnapshot.child("date").getValue(String.class);
+                    if (!date.equals("none")) {
+                        try {
+                            Date dateVal = new SimpleDateFormat("dd/MM/yyyy").parse(date);
+                            if (new Date().equals(dateVal)) {
+                                if (!savedKey.equals(key)) {
+                                    ProfileGeofenceNotification.notify(context, "sound profile updated", 0);
+                                    dataSnapshot.getRef().child("state").setValue(true);
+                                    profileModel = new ProfileModel(dataSnapshot);
+                                    updateSoundProfile(profileModel);
+                                    context.getSharedPreferences("notifier_pref", Context.MODE_PRIVATE).edit()
+                                            .putString("name", key).apply();
+                                }
+                            }
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+
+                    } else {
+                        if (!savedKey.equals(key)) {
+                            ProfileGeofenceNotification.notify(context, "sound profile updated", 0);
+                            dataSnapshot.getRef().child("state").setValue(true);
+                            profileModel = new ProfileModel(dataSnapshot);
+                            updateSoundProfile(profileModel);
+                            context.getSharedPreferences("notifier_pref", Context.MODE_PRIVATE).edit()
+                                    .putString("name", key).apply();
+                        }
                     }
                 }
             }
-
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 Toast.makeText(SoundProfileManager.this.context, databaseError.getMessage(), Toast.LENGTH_SHORT).show();

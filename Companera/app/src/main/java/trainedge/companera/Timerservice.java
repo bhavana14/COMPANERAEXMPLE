@@ -13,8 +13,6 @@ import trainedge.companera.Alert_Activity;
 
 public class Timerservice extends BroadcastReceiver {
     public static final int REQUEST_CODE = 12345;
-    Context mContext;
-    public static final String ACTION = "trainedge.lbprofiler.services.alarm";
 
     // Triggered by the Alarm periodically (starts the service to run task)
     @Override

@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.os.ResultReceiver;
@@ -53,7 +54,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private Location currentLocation;
     private TextView tvAddress;
     String address;
-    private static final String PACKAGE_NAME = "trainedge.lbprofiler";
+    private static final String PACKAGE_NAME = "trainedge.companera";
     public static final String KEY_ADDRESS = PACKAGE_NAME + ".address";
     public static final String KEY_LAT = PACKAGE_NAME + ".latitude";
     public static final String KEY_LNG = PACKAGE_NAME + ".longitude";
@@ -68,7 +69,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private ProgressBar pbLoader;
 
     private LatLng userLocationSelected;
-    public Button btnOk;
+    public FloatingActionButton btnOk;
 
 
     @Override
@@ -78,7 +79,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         tvAddress = (TextView) findViewById(R.id.tvAddress);
         pbLoader = (ProgressBar) findViewById(R.id.pbLoader);
         pbLoader.setVisibility(View.GONE);
-        btnOk = (Button) findViewById(R.id.btnOk);
+        btnOk = (FloatingActionButton) findViewById(R.id.btnOk);
         btnOk.setOnClickListener(this);
         buildGoogleApiClient();
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
@@ -94,7 +95,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // Create an instance of GoogleAPIClient.
 
     }
-
 
 
     protected synchronized void buildGoogleApiClient() {
@@ -199,9 +199,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             address = tvAddress.getText().toString();
 
             Intent i = new Intent(MapsActivity.this, ProfileCreation.class);
-            i.putExtra("trainedge.companera.address", address);
-            i.putExtra("trainedge.companera.latitude", userLocationSelected.latitude);
-            i.putExtra("trainedge.companera.longitude", userLocationSelected.longitude);
+            i.putExtra(KEY_ADDRESS, address);
+            i.putExtra(KEY_LAT, userLocationSelected.latitude);
+            i.putExtra(KEY_LNG, userLocationSelected.longitude);
             startActivity(i);
         } else {
             Toast.makeText(this, "Location is not selected, PLease Long Press on Desired Location", Toast.LENGTH_LONG).show();

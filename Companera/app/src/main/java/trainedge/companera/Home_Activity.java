@@ -96,20 +96,17 @@ public class Home_Activity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        nav_signOut = (MenuItem)findViewById(nav_SignOut);
+        nav_signOut = (MenuItem) findViewById(nav_SignOut);
         headerView = navigationView.getHeaderView(0);//header view object for getting image on nav_bar
         updateui(headerView);
 
         mAuth = FirebaseAuth.getInstance();
-        mAuthListener =new FirebaseAuth.AuthStateListener(){
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
 
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user=firebaseAuth.getCurrentUser();
-                if(user==null){
-                    Intent logint =new Intent(Home_Activity.this,Login_Activity.class);
-                    startActivity(logint);
-                    finish();
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if (user == null) {
                 }
             }
         };
@@ -122,8 +119,8 @@ public class Home_Activity extends AppCompatActivity
         // lbprofiler
 
         handlePermissions();
-        //Intent intent = new Intent(this, GeofenceService.class);
-        startService(new Intent(this, GeofenceService.class));
+        Intent intent = new Intent(this, GeofenceService.class);
+        startService(intent);
 
         setDatabase();
         scheduleAlarm();
@@ -146,8 +143,8 @@ public class Home_Activity extends AppCompatActivity
         final ProfileAdapter adapter = new ProfileAdapter(this, profileList);
         rvProfileList.setAdapter(adapter);
         //SlideInUpAnimator animator = new SlideInUpAnimator(new OvershootInterpolator(1f));
-       // rvProfileList.setItemAnimator(animator);
-       // rvProfileList.getItemAnimator().setAddDuration(1000);
+        // rvProfileList.setItemAnimator(animator);
+        // rvProfileList.getItemAnimator().setAddDuration(1000);
         //setup listener
         //using anonymous class
 
@@ -243,7 +240,7 @@ public class Home_Activity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.profile_Id:
                 // Profile view
                 Intent profileinfo = new Intent(Home_Activity.this, Profile_Activity.class);
@@ -254,7 +251,7 @@ public class Home_Activity extends AppCompatActivity
                 startActivity(getlocation);
                 break;
             case R.id.sett_ings:
-               Intent i=new Intent(this,ProfileModification.class);
+                Intent i = new Intent(this, ProfileModification.class);
                 startActivity(i);
                 break;
             case R.id.sett_List:
@@ -272,11 +269,11 @@ public class Home_Activity extends AppCompatActivity
                 share.putExtra(Intent.EXTRA_TEXT, "Your friend has invited you to join the app./n To join click the link");
                 startActivity(Intent.createChooser(share, "Share via..."));
             case R.id.nav_about:
-                Intent about = new Intent(Home_Activity.this,AboutActivity.class);
+                Intent about = new Intent(Home_Activity.this, AboutActivity.class);
                 startActivity(about);
                 break;
             case R.id.nav_feedback:
-               Intent feedback = new Intent(Home_Activity.this,Feedback.class);
+                Intent feedback = new Intent(Home_Activity.this, Feedback.class);
                 startActivity(feedback);
                 break;
             case R.id.nav_view:
@@ -287,16 +284,15 @@ public class Home_Activity extends AppCompatActivity
                 try {
                     LoginManager.getInstance().logOut();
                     AccessToken.setCurrentAccessToken(null);
-                } catch (Exception ignored){
+                } catch (Exception ignored) {
                 }
-                Intent lgtIntent=new Intent(this,Login_Activity.class);
+                Intent lgtIntent = new Intent(this, Login_Activity.class);
                 startActivity(lgtIntent);
 
                 finish();
                 break;
             case R.id.action_settings:
                 break;
-
 
 
         }
@@ -306,6 +302,7 @@ public class Home_Activity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
     private void sendInvitation() {
         Intent intent = new AppInviteInvitation.IntentBuilder(getString(R.string.invitation_title))
                 .setMessage(getString(R.string.invitation_message))
@@ -337,6 +334,7 @@ public class Home_Activity extends AppCompatActivity
             }
         }
     }
+
     //featching profile information in header view-----------------------------------------------------
     private void updateui(View headerView) {
         ImageView imageView = (ImageView) headerView.findViewById(R.id.imageView);
@@ -353,44 +351,45 @@ public class Home_Activity extends AppCompatActivity
                 .transform(new CircleTransform())
                 .into(imageView);
     }
-        private class CircleTransform implements Transformation {
-            @Override
-            public Bitmap transform(Bitmap source) {
-                int size = Math.min(source.getWidth(), source.getHeight());
 
-                int x = (source.getWidth() - size) / 2;
-                int y = (source.getHeight() - size) / 2;
+    private class CircleTransform implements Transformation {
+        @Override
+        public Bitmap transform(Bitmap source) {
+            int size = Math.min(source.getWidth(), source.getHeight());
 
-                Bitmap squaredBitmap = Bitmap.createBitmap(source, x, y, size, size);
-                if (squaredBitmap != source) {
-                    source.recycle();
-                }
+            int x = (source.getWidth() - size) / 2;
+            int y = (source.getHeight() - size) / 2;
 
-                Bitmap bitmap = Bitmap.createBitmap(size, size, source.getConfig());
-
-                Canvas canvas = new Canvas(bitmap);
-                Paint paint = new Paint();
-                BitmapShader shader = new BitmapShader(squaredBitmap,
-                        BitmapShader.TileMode.CLAMP, BitmapShader.TileMode.CLAMP);
-                paint.setShader(shader);
-                paint.setAntiAlias(true);
-
-                float r = size / 2f;
-                canvas.drawCircle(r, r, r, paint);
-
-                squaredBitmap.recycle();
-                return bitmap;
+            Bitmap squaredBitmap = Bitmap.createBitmap(source, x, y, size, size);
+            if (squaredBitmap != source) {
+                source.recycle();
             }
 
-            @Override
-            public String key() {
-                return "circle";
-            }
+            Bitmap bitmap = Bitmap.createBitmap(size, size, source.getConfig());
 
+            Canvas canvas = new Canvas(bitmap);
+            Paint paint = new Paint();
+            BitmapShader shader = new BitmapShader(squaredBitmap,
+                    BitmapShader.TileMode.CLAMP, BitmapShader.TileMode.CLAMP);
+            paint.setShader(shader);
+            paint.setAntiAlias(true);
+
+            float r = size / 2f;
+            canvas.drawCircle(r, r, r, paint);
+
+            squaredBitmap.recycle();
+            return bitmap;
         }
 
-
         @Override
+        public String key() {
+            return "circle";
+        }
+
+    }
+
+
+    @Override
     protected void onStart() {
         super.onStart();
         if (mGoogleApiClient != null) {
@@ -405,19 +404,19 @@ public class Home_Activity extends AppCompatActivity
             mGoogleApiClient.disconnect();
         }
     }
-            public void scheduleAlarm() {
-                // Construct an intent that will execute the AlarmReceiver
-                Intent intent = new Intent(getApplicationContext(), Timerservice.class);
-                // Create a PendingIntent to be triggered when the alarm goes off
-                pIntent = PendingIntent.getBroadcast(this, Timerservice.REQUEST_CODE,
-                        intent, PendingIntent.FLAG_UPDATE_CURRENT);
-                // Setup periodic alarm every 5 seconds
-                long firstMillis = System.currentTimeMillis(); // alarm is set right away
-                alarm = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
-                // First parameter is the type: ELAPSED_REALTIME, ELAPSED_REALTIME_WAKEUP, RTC_WAKEUP
-                // Interval can be INTERVAL_FIFTEEN_MINUTES, INTERVAL_HALF_HOUR, INTERVAL_HOUR, INTERVAL_DAY
-                alarm.setInexactRepeating(AlarmManager.RTC_WAKEUP, firstMillis,
-                        60000, pIntent);
 
-            }
+    public void scheduleAlarm() {
+        // Construct an intent that will execute the AlarmReceiver
+        Intent intent = new Intent(getApplicationContext(), Timerservice.class);
+        // Create a PendingIntent to be triggered when the alarm goes off
+        pIntent = PendingIntent.getBroadcast(this, Timerservice.REQUEST_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        // Setup periodic alarm every 5 seconds
+        long firstMillis = System.currentTimeMillis(); // alarm is set right away
+        alarm = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
+        // First parameter is the type: ELAPSED_REALTIME, ELAPSED_REALTIME_WAKEUP, RTC_WAKEUP
+        // Interval can be INTERVAL_FIFTEEN_MINUTES, INTERVAL_HALF_HOUR, INTERVAL_HOUR, INTERVAL_DAY
+        alarm.setInexactRepeating(AlarmManager.RTC_WAKEUP, firstMillis,
+                60000, pIntent);
+
+    }
 }

@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "852918205439-du0ptmipqh5nmmdeg3tep63ibtuiivd6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "trainedge.companera",
+            "certificate_hash": "b7475dadf764f92f142ecae564ec5e8a4622baa1"
+          }
+        },
+        {
           "client_id": "852918205439-vio4evropmst2k5cn2qcuod4rl5orq09.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

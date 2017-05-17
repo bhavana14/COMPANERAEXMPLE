@@ -28,8 +28,6 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
 
-
-
 import static trainedge.companera.ProfileAdapter.PROFILE_NAME;
 import static trainedge.companera.R.id.etProfile;
 

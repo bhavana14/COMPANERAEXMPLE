@@ -1,8 +1,12 @@
 package trainedge.companera;
 
+import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.database.Cursor;
+
+import java.util.Calendar;
+
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -12,6 +16,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.Spinner;
@@ -28,12 +33,16 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.HashMap;
 
+import static trainedge.companera.MapsActivity.KEY_ADDRESS;
+import static trainedge.companera.MapsActivity.KEY_LAT;
+import static trainedge.companera.MapsActivity.KEY_LNG;
 import static trainedge.companera.R.id.etProfile;
 import static trainedge.companera.R.id.tvAddress_Get;
 
 public class ProfileCreation extends AppCompatActivity implements AdapterView.OnItemSelectedListener, View.OnClickListener, CompoundButton.OnCheckedChangeListener {
     TextView Locaddress;
     Button btnCreate;
+    Button btnSelectDateTime;
     private EditText etName;
     private EditText etGeofence;
     private Spinner spRing;
@@ -48,6 +57,8 @@ public class ProfileCreation extends AppCompatActivity implements AdapterView.On
     private String address;
     private Double lat;
     private Double lng;
+    private boolean isDateSet=false;
+    private String dateSelected;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +83,7 @@ public class ProfileCreation extends AppCompatActivity implements AdapterView.On
         sVibrate = (Switch) findViewById(R.id.sVibration);
         sSilentMode = (Switch) findViewById(R.id.sSilentMode);
         btnCreate = (Button) findViewById(R.id.btnCreate);
+        btnSelectDateTime = (Button) findViewById(R.id.btnSelectDate);
 
 
     }
@@ -88,9 +100,9 @@ public class ProfileCreation extends AppCompatActivity implements AdapterView.On
 
     private void handleLocationData() {
         Bundle extras = getIntent().getExtras();
-        address = extras.getString("trainedge.lbprofiler.address");
-        lat = extras.getDouble("trainedge.lbprofiler.latitude");
-        lng = extras.getDouble("trainedge.lbprofiler.longitude");
+        address = extras.getString(KEY_ADDRESS);
+        lat = extras.getDouble(KEY_LAT);
+        lng = extras.getDouble(KEY_LNG);
         updateUI(address, lat, lng);
     }
 
@@ -98,6 +110,7 @@ public class ProfileCreation extends AppCompatActivity implements AdapterView.On
         spRing.setOnItemSelectedListener(this);
         spMsg.setOnItemSelectedListener(this);
         btnCreate.setOnClickListener(this);
+        btnSelectDateTime.setOnClickListener(this);
         sVibrate.setOnCheckedChangeListener(this);
         sSilentMode.setOnCheckedChangeListener(this);
     }
@@ -163,7 +176,22 @@ public class ProfileCreation extends AppCompatActivity implements AdapterView.On
             case R.id.btnCreate:
                 createNewSoundProfile();
                 break;
+            case R.id.btnSelectDate:
+                showSelectorDialog(v);
+                break;
         }
+    }
+
+    private void showSelectorDialog(final View v) {
+        DatePickerDialog dialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                dateSelected = dayOfMonth + "/" + month + 1 + "/" + year;
+                ((Button) v).setText(dateSelected);
+                isDateSet=true;
+            }
+        }, Calendar.getInstance().get(Calendar.YEAR), Calendar.getInstance().get(Calendar.MONTH), Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
+        dialog.show();
     }
 
     private void createNewSoundProfile() {
@@ -213,6 +241,11 @@ public class ProfileCreation extends AppCompatActivity implements AdapterView.On
         profileData.put("lng", lng);
         profileData.put("radius", geoFenceStr);
         profileData.put("state", false);
+        if (isDateSet){
+            profileData.put("date",dateSelected);
+        }else{
+            profileData.put("date","none");
+        }
         profilesRef.setValue(profileData, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
