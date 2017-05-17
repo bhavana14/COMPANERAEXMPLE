@@ -122,7 +122,7 @@ public class Home_Activity extends AppCompatActivity
         // lbprofiler
 
         handlePermissions();
-        Intent intent = new Intent(this, GeofenceService.class);
+        //Intent intent = new Intent(this, GeofenceService.class);
         startService(new Intent(this, GeofenceService.class));
 
         setDatabase();

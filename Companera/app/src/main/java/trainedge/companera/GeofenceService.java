@@ -58,6 +58,7 @@ public class GeofenceService extends Service implements GoogleApiClient.Connecti
         if (mGoogleApiClient != null && !mGoogleApiClient.isConnected()) {
             mGoogleApiClient.connect();
         }
+        Toast.makeText(this, "Service started", Toast.LENGTH_SHORT).show();
         return START_STICKY_COMPATIBILITY;
     }
 
