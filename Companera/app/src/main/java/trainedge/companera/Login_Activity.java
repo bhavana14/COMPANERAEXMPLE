@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.facebook.AccessToken;
@@ -43,6 +44,8 @@ public class Login_Activity extends AppCompatActivity implements GoogleApiClient
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private CallbackManager mCallbackManager;
+    private ProgressBar pbgoogle;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,6 +86,8 @@ public class Login_Activity extends AppCompatActivity implements GoogleApiClient
 
         };
         //final line
+        pbgoogle = (ProgressBar) findViewById(R.id.pbgoogle);
+        pbgoogle.setVisibility(View.GONE);
         ivGoogle_Sign_In.setOnClickListener(this);
 
         //facebook step
@@ -185,6 +190,7 @@ public class Login_Activity extends AppCompatActivity implements GoogleApiClient
 
     @Override
     public void onClick(View v) {
+        pbgoogle.setVisibility(View.VISIBLE);
         switch (v.getId()) {
             case R.id.ivGoogle_Sign_In:
                 signIn();

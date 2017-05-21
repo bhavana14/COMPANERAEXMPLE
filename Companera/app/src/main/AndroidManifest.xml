@@ -49,7 +49,6 @@
         </activity>
         <activity
             android:name=".Login_Activity"
-            android:label="LOGIN"
             android:theme="@style/AppTheme" />
         <activity
             android:name=".Home_Activity"
@@ -129,7 +128,7 @@
             android:process=":remote" />
 
         <activity android:name=".AlertActivity" />
-
+        <activity android:name=".AboutDeveloper"></activity>
     </application>
 
 </manifest>

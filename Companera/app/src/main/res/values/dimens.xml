@@ -16,5 +16,7 @@
     <dimen name="location_item_padding">8dp</dimen>
     <dimen name="location_item_separator_height">2dp</dimen>
 
+
+
 </resources>
 

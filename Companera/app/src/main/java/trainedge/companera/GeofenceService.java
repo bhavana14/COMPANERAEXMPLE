@@ -58,7 +58,7 @@ public class GeofenceService extends Service implements GoogleApiClient.Connecti
         if (mGoogleApiClient != null && !mGoogleApiClient.isConnected()) {
             mGoogleApiClient.connect();
         }
-        Toast.makeText(this, "Service started", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, "Service started", Toast.LENGTH_SHORT).show();
         return START_STICKY_COMPATIBILITY;
     }
 
@@ -138,7 +138,7 @@ public class GeofenceService extends Service implements GoogleApiClient.Connecti
             @Override
             public void onGeoQueryReady() {
                 System.out.println("All initial data has been loaded and events have been fired!");
-                Toast.makeText(GeofenceService.this, "service ready", Toast.LENGTH_SHORT).show();
+  //              Toast.makeText(GeofenceService.this, "service ready", Toast.LENGTH_SHORT).show();
             }
 
             @Override

@@ -34,6 +34,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.animation.OvershootInterpolator;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -80,6 +81,7 @@ public class Home_Activity extends AppCompatActivity
     private Context mContext;
     private PendingIntent pIntent;
     private AlarmManager alarm;
+    private ProgressBar pbStatus;
 
     @RequiresApi(api = Build.VERSION_CODES.GINGERBREAD)
     @Override
@@ -87,6 +89,7 @@ public class Home_Activity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        pbStatus = (ProgressBar) findViewById(R.id.pbStatus);
         setSupportActionBar(toolbar);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -168,6 +171,9 @@ public class Home_Activity extends AppCompatActivity
                 } else {
                     Toast.makeText(Home_Activity.this, "No Profiles", Toast.LENGTH_SHORT).show();
                 }
+                pbStatus.setVisibility(View.GONE);
+
+
             }
 
             @Override
@@ -254,8 +260,7 @@ public class Home_Activity extends AppCompatActivity
                 Intent i = new Intent(this, ProfileModification.class);
                 startActivity(i);
                 break;
-            case R.id.sett_List:
-                break;
+
             case R.id.nav_invite:
                 //// TODO: invite friends
                 sendInvitation();
@@ -276,7 +281,9 @@ public class Home_Activity extends AppCompatActivity
                 Intent feedback = new Intent(Home_Activity.this, Feedback.class);
                 startActivity(feedback);
                 break;
-            case R.id.nav_view:
+            case R.id.nav_dev:
+                Intent developer =new  Intent (Home_Activity.this,AboutDeveloper.class);
+                startActivity(developer);
                 break;
             case nav_SignOut:
                 //// TODO: user logout

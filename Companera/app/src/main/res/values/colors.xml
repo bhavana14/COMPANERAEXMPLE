@@ -13,4 +13,12 @@
     <color name="location_list_fragment_background">#13044c</color>
     <color name="separator">#f0577457</color>
     <color name="white">#fffdfd</color>
+    <!-- Color Palette -->
+    <color name="starNormalColor">#c4c4c4</color>
+    <color name="starSelectedColor">#ffdc01</color>
+    <color name="colorMardiGras">#2D2C2D</color>
+    <color name="colorMediumPurple">#8C53E5</color>
+    <color name="colorPurpleHeart">#5E2EAA</color>
+    <color name="colorAmethyst">#824ED1</color>
+    <color name="colorCranberry">#DD467C</color>
 </resources>
