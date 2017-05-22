@@ -4,7 +4,7 @@ import android.content.Context;
 import android.media.AudioManager;
 import android.media.RingtoneManager;
 import android.net.Uri;
-import android.text.format.DateUtils;
+
 import android.widget.Toast;
 
 import com.firebase.geofire.GeoLocation;
@@ -44,12 +44,14 @@ public class SoundProfileManager {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.hasChildren()) {
-                    String savedKey = context.getSharedPreferences("notifier_pref", Context.MODE_PRIVATE).getString("name", "");
+                   /* String savedKey = context.getSharedPreferences("notifier_pref", Context.MODE_PRIVATE).getString("name", "");
                     boolean state = dataSnapshot.child("state").getValue(Boolean.class);
                     String date = dataSnapshot.child("date").getValue(String.class);
+
                     if (!date.equals("none")) {
                         try {
-                            Date dateVal = new SimpleDateFormat("dd/MM/yyyy").parse(date);
+                           // Date dateVal = new SimpleDateFormat("dd/MM/yyyy").parse(date);
+                            Date dateVal=new SimpleDateFormat("dd-MM-yyyy").parse(date);
                             if (new Date().equals(dateVal)) {
                                 if (!savedKey.equals(key)) {
                                     ProfileGeofenceNotification.notify(context, "sound profile updated", 0);
@@ -73,6 +75,13 @@ public class SoundProfileManager {
                             context.getSharedPreferences("notifier_pref", Context.MODE_PRIVATE).edit()
                                     .putString("name", key).apply();
                         }
+                    }*/
+                    boolean state = dataSnapshot.child("state").getValue(Boolean.class);
+                    if (!state) {
+                        ProfileGeofenceNotification.notify(context, "sound profile updated", 0);
+                        dataSnapshot.getRef().child("state").setValue(true);
+                        profileModel = new ProfileModel(dataSnapshot);
+                        updateSoundProfile(profileModel);
                     }
                 }
             }
