@@ -269,10 +269,11 @@ public class Home_Activity extends AppCompatActivity
                 //// share
                 Intent share = new Intent(Intent.ACTION_SEND);
                 share.setType("text/plain");
-                share.putExtra(Intent.EXTRA_SUBJECT, "Scoop");
+                share.putExtra(Intent.EXTRA_SUBJECT, "Companera");
 
                 share.putExtra(Intent.EXTRA_TEXT, "Your friend has invited you to join the app./n To join click the link");
                 startActivity(Intent.createChooser(share, "Share via..."));
+                return true;
             case R.id.nav_about:
                 Intent about = new Intent(Home_Activity.this, AboutActivity.class);
                 startActivity(about);

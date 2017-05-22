@@ -17,6 +17,7 @@
 
 
 
-    <include layout="@layout/content_login_" />
+    <include layout="@layout/content_login_"
+        android:id="@+id/include" />
 
 </android.support.design.widget.CoordinatorLayout>

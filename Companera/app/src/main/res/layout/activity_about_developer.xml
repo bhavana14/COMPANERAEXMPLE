@@ -224,14 +224,15 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/textView9"
+                android:id="@+id/tvmailid"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignBottom="@+id/textView8"
                 android:layout_alignStart="@+id/tv2"
+                android:background="@color/fab_material_amber_500"
                 android:text="companera14@gmail.com"
-                android:textColor="#fd1616"
-                android:textSize="15sp"
+                android:textColor="@color/fab_material_light_green_900"
+                android:textSize="17sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -239,7 +240,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignEnd="@+id/tv2"
-                android:layout_below="@+id/textView9"
+                android:layout_below="@+id/tvmailid"
                 android:layout_marginTop="17dp"
                 android:text="Developer"
                 android:textColor="#b31557"
@@ -264,8 +265,9 @@
                 android:fontFamily="cursive"
                 android:text="Bhavana Chaurasia  (Msc IT)"
                 android:textAlignment="center"
-                android:textColor="#fa0d0717"
-                android:textSize="20sp" />
+                android:textColor="#fae51732"
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
         </RelativeLayout>
     </ScrollView>
