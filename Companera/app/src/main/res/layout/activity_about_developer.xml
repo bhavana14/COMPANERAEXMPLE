@@ -229,7 +229,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignBottom="@+id/textView8"
                 android:layout_alignStart="@+id/tv2"
-                android:background="@color/fab_material_amber_500"
+                android:background="#f5d061"
                 android:text="companera14@gmail.com"
                 android:textColor="@color/fab_material_light_green_900"
                 android:textSize="17sp"
