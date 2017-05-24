@@ -10,165 +10,167 @@
     tools:layout_editor_absoluteX="0dp"
     tools:layout_editor_absoluteY="25dp">
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="serif-monospace"
-        android:text="Modify Details Of Profile Created"
-        android:textAlignment="center"
 
-        android:textAllCaps="true"
-        android:textColor="?android:attr/editTextColor"
-        android:textSize="30sp"
-        android:textStyle="bold"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="0dp" />
 
-    <TextView
-        android:id="@+id/tvAddress_Get"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:padding="2dp"
-        android:paddingBottom="9dp"
-        android:paddingTop="9dp"
-        android:textSize="18sp" />
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="serif-monospace"
+                android:text="Modify Details Of Profile Created"
+                android:textAlignment="center"
 
-    <EditText
-        android:id="@+id/editText2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+                android:textAllCaps="true"
+                android:textColor="?android:attr/editTextColor"
+                android:textSize="30sp"
+                android:textStyle="bold"
+                tools:layout_editor_absoluteX="0dp"
+                tools:layout_editor_absoluteY="0dp" />
 
-        android:layout_marginTop="4dp"
-        android:ems="10"
-        android:hint="Name Of Profile"
-        android:inputType="textPersonName"
-        tools:layout_editor_absoluteX="10dp"
-        tools:layout_editor_absoluteY="125dp" />
+            <TextView
+                android:id="@+id/tvAddress_Get"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:padding="2dp"
+                android:paddingBottom="9dp"
+                android:paddingTop="9dp"
+                android:textSize="18sp" />
 
-    <TextView
-        android:id="@+id/textView4"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="Geo Fence Size"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        tools:layout_editor_absoluteX="10dp"
-        tools:layout_editor_absoluteY="184dp" />
+            <EditText
+                android:id="@+id/editText2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
 
-    <EditText
-        android:id="@+id/editText4"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:ems="10"
+                android:hint="Name Of Profile"
+                android:inputType="textPersonName"
+                tools:layout_editor_absoluteX="10dp"
+                tools:layout_editor_absoluteY="125dp" />
 
-        android:layout_marginTop="4dp"
-        android:ems="10"
-        android:inputType="number"
-        android:maxLength="4"
-        tools:layout_editor_absoluteX="159dp"
-        tools:layout_editor_absoluteY="184dp" />
+            <TextView
+                android:id="@+id/textView4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Geo Fence Size"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                tools:layout_editor_absoluteX="10dp"
+                tools:layout_editor_absoluteY="184dp" />
 
-    <TextView
-        android:id="@+id/textView5"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+            <EditText
+                android:id="@+id/editText4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
 
-        android:layout_marginTop="10dp"
-        android:text="Ringtone"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        tools:layout_editor_absoluteX="10dp"
-        tools:layout_editor_absoluteY="238dp" />
+                android:layout_marginTop="4dp"
+                android:ems="10"
+                android:inputType="number"
+                android:maxLength="4"
+                tools:layout_editor_absoluteX="159dp"
+                tools:layout_editor_absoluteY="184dp" />
 
-    <Spinner
-        android:id="@+id/spinner2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+            <TextView
+                android:id="@+id/textView5"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
 
-        android:layout_marginTop="10dp"
-        tools:layout_editor_absoluteX="157dp"
-        tools:layout_editor_absoluteY="238dp" />
+                android:layout_marginTop="10dp"
+                android:text="Ringtone"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                tools:layout_editor_absoluteX="10dp"
+                tools:layout_editor_absoluteY="238dp" />
 
-    <TextView
-        android:id="@+id/textView6"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+            <Spinner
+                android:id="@+id/spinner2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
 
-        android:layout_marginTop="10dp"
-        android:text="Volume"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        tools:layout_editor_absoluteX="8dp"
-        tools:layout_editor_absoluteY="296dp" />
+                android:layout_marginTop="10dp"
+                tools:layout_editor_absoluteX="157dp"
+                tools:layout_editor_absoluteY="238dp" />
 
-    <SeekBar
-        android:id="@+id/seekBar2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+            <TextView
+                android:id="@+id/textView6"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
 
-        android:layout_marginTop="15dp"
-        android:progress="60"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/editText"
-        tools:layout_editor_absoluteX="157dp"
-        tools:layout_editor_absoluteY="296dp" />
+                android:layout_marginTop="10dp"
+                android:text="Volume"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                tools:layout_editor_absoluteX="8dp"
+                tools:layout_editor_absoluteY="296dp" />
 
-    <TextView
-        android:id="@+id/textView7"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="9dp"
-        android:text="Message Tone"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        tools:layout_editor_absoluteX="8dp"
-        tools:layout_editor_absoluteY="351dp" />
+            <SeekBar
+                android:id="@+id/seekBar2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
 
-    <Spinner
-        android:id="@+id/spinner3"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:progress="60"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/editText"
+                tools:layout_editor_absoluteX="157dp"
+                tools:layout_editor_absoluteY="296dp" />
 
-        android:layout_marginTop="10dp"
-        tools:layout_editor_absoluteX="159dp"
-        tools:layout_editor_absoluteY="352dp" />
+            <TextView
+                android:id="@+id/textView7"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="9dp"
+                android:text="Message Tone"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                tools:layout_editor_absoluteX="8dp"
+                tools:layout_editor_absoluteY="351dp" />
 
-    <Switch
-        android:id="@+id/switch1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+            <Spinner
+                android:id="@+id/spinner3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
 
-        android:layout_marginTop="9dp"
-        android:text="SILENT"
-        android:textSize="14sp"
-        tools:layout_editor_absoluteX="60dp"
-        tools:layout_editor_absoluteY="433dp" />
+                android:layout_marginTop="10dp"
+                tools:layout_editor_absoluteX="159dp"
+                tools:layout_editor_absoluteY="352dp" />
 
-    <Switch
-        android:id="@+id/switch2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+            <Switch
+                android:id="@+id/switch1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
 
-        android:layout_marginTop="9dp"
-        android:text="VIBRATION"
-        android:textSize="14sp"
-        tools:layout_editor_absoluteX="200dp"
-        tools:layout_editor_absoluteY="433dp" />
+                android:layout_marginTop="9dp"
+                android:text="SILENT"
+                android:textSize="14sp"
+                tools:layout_editor_absoluteX="60dp"
+                tools:layout_editor_absoluteY="433dp" />
 
-    <Button
-        android:id="@+id/button2"
-        android:layout_width="match_parent"
-        android:layout_height="59dp"
+            <Switch
+                android:id="@+id/switch2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
 
-        android:layout_marginTop="0dp"
-        android:fontFamily="sans-serif-condensed"
-        android:text="MODIFY"
-        android:textSize="24sp"
-        android:textStyle="italic"
-        tools:layout_editor_absoluteX="8dp"
-        tools:layout_editor_absoluteY="504dp" />
+                android:layout_marginTop="9dp"
+                android:text="VIBRATION"
+                android:textSize="14sp"
+                tools:layout_editor_absoluteX="200dp"
+                tools:layout_editor_absoluteY="433dp" />
+
+            <Button
+                android:id="@+id/button2"
+                android:layout_width="match_parent"
+                android:layout_height="59dp"
+
+                android:layout_below="@+id/textView"
+                android:fontFamily="sans-serif-condensed"
+                android:text="MODIFY"
+                android:textSize="24sp"
+                android:textStyle="italic"
+                tools:layout_editor_absoluteX="8dp"
+                tools:layout_editor_absoluteY="504dp" />
 
 </LinearLayout>
 

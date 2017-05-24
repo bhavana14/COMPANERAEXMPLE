@@ -14,17 +14,7 @@
         android:id="@+id/iv"
         android:layout_width="250dp"
         android:layout_height="250dp"
-        android:background="@drawable/splash" />
-
-    <TextView
-        android:id="@+id/tvsp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="cursive"
-        android:text="COMPANERA"
-        android:textColor="@android:color/white"
-        android:textSize="30sp"
-        android:textStyle="bold" />
+        android:background="@drawable/new_logo" />
 
 </LinearLayout>
 
