@@ -37,7 +37,7 @@ public class SoundProfileManager {
     public void changeSoundProfile(final Context context, final String key, GeoLocation location) {
         String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
         final DatabaseReference profilesRef = FirebaseDatabase.getInstance().getReference("profiles").child(uid).child(key);
-        Toast.makeText(this.context, "key= " + key, Toast.LENGTH_SHORT).show();
+       // Toast.makeText(this.context, "key= " + key, Toast.LENGTH_SHORT).show();
         profilesRef.addValueEventListener(new ValueEventListener() {
 
 
