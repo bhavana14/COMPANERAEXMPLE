@@ -60,8 +60,8 @@
     <string name="title_activity_alert_">Alert_Activity</string>
     <string name="title_activity_all_geofence_fregment">AllGeofenceFregment</string>
     <string name="title_activity_view_profile">ViewProfileActivity</string>
-    <string name="task_geofence_notification_title_template" />
-    <string name="task_geofence_notification_placeholder_text_template" />
+    <string name="task_geofence_notification_title_template">Hi! Your Location is Changed</string>
+    <string name="task_geofence_notification_placeholder_text_template"> Sound Profile is Changed</string>
     <string name="action_share" />
     <string name="action_reply" />
 

@@ -19,7 +19,7 @@ public class ProfileGeofenceNotification {
                               final String exampleString, final int number) {
         final Resources res = context.getResources();
 
-        final Bitmap picture = BitmapFactory.decodeResource(res, R.drawable.my_pic);
+        final Bitmap picture = BitmapFactory.decodeResource(res, R.drawable.new_logo);
 
 
         final String ticker = exampleString;
