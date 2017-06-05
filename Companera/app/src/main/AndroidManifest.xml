@@ -11,9 +11,10 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"/>
-    <uses-permission android:name="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE"/>
-    <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY"/>
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    <uses-permission android:name="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE" />
+    <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
+
     <application
         android:name="android.support.multidex.MultiDexApplication"
         android:allowBackup="true"
@@ -40,9 +41,7 @@
 
             <receiver android:name=".receivers.BootReceiver" />
         </activity>
-        <activity
-            android:name=".Splash_Activity"
-            >
+        <activity android:name=".Splash_Activity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -130,7 +129,10 @@
             android:process=":remote" />
 
         <activity android:name=".AlertActivity" />
-        <activity android:name=".AboutDeveloper"></activity>
+        <activity android:name=".AboutDeveloper" />
+        <activity
+            android:name=".farzi"
+            android:label="@string/title_activity_farzi"></activity>
     </application>
 
 </manifest>

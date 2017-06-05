@@ -11,6 +11,7 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        vectorDrawables.useSupportLibrary = true
     }
     buildTypes {
         release {
@@ -22,13 +23,13 @@ android {
 
 dependencies {
     //feedback and Rateus
+    compile 'com.github.florent37:viewanimator:1.0.5'
+    compile 'com.jakewharton:butterknife:8.4.0'
     compile 'de.hdodenhof:circleimageview:2.1.0'
     compile 'com.github.bumptech.glide:glide:3.7.0'
     compile 'com.jakewharton:butterknife:8.4.0'
     compile 'com.github.florent37:viewanimator:1.0.5'
     compile 'com.jakewharton:butterknife-compiler:8.4.0'
-    compile 'com.github.florent37:viewanimator:1.0.5'
-    compile 'com.jakewharton:butterknife:8.4.0'
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.android.support:design:25.3.1'
@@ -50,5 +51,6 @@ dependencies {
     compile 'com.google.firebase:firebase-database:10.0.1'
     compile 'com.intuit.sdp:sdp-android:1.0.4'
     compile 'com.afollestad.material-dialogs:core:0.9.4.5'
+    compile 'com.android.support:support-vector-drawable:25.3.1'
 }
 apply plugin: 'com.google.gms.google-services'

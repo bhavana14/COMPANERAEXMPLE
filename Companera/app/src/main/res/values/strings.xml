@@ -64,5 +64,9 @@
     <string name="task_geofence_notification_placeholder_text_template"> Sound Profile is Changed</string>
     <string name="action_share" />
     <string name="action_reply" />
+    <string name="title_activity_farzi">farzi</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
 
 </resources>
