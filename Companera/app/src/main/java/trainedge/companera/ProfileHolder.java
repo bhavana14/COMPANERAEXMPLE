@@ -8,9 +8,9 @@ import android.widget.TextView;
 public class ProfileHolder extends RecyclerView.ViewHolder {
 
     View container;
-    TextView tvProfileView;
-    TextView tvProfileState;
-    TextView tvProfileName;
+   public TextView tvProfileView;
+    public TextView tvProfileState;
+   public  TextView tvProfileName;
 
     public ProfileHolder(View itemView) {
         super(itemView);

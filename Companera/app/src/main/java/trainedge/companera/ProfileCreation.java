@@ -186,7 +186,8 @@ public class ProfileCreation extends AppCompatActivity implements AdapterView.On
         DatePickerDialog dialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                dateSelected = dayOfMonth + "/" + month + 1 + "/" + year;
+                month++;
+                dateSelected = dayOfMonth + "/" + month  + "/" + year;
                 ((Button) v).setText(dateSelected);
                 isDateSet=true;
             }

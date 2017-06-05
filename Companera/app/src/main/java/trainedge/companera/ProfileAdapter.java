@@ -2,11 +2,15 @@ package trainedge.companera;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -56,12 +60,24 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileHolder> {
         holder.container.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                FirebaseDatabase.getInstance().getReference("profiles").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(model.getKey()).removeValue();
-                FirebaseDatabase.getInstance().getReference("profiles").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("geofire").child(model.getKey()).removeValue();
+                MaterialDialog.Builder builder=new MaterialDialog.Builder(ProfileAdapter.this.context)
+                        .canceledOnTouchOutside(false)
+                        .content("Are you sure")
+                        .positiveText("Yes")
+                        .negativeText("No")
+                        .onPositive(new MaterialDialog.SingleButtonCallback() {
+                            @Override
+                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                FirebaseDatabase.getInstance().getReference("profiles").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(model.getKey()).removeValue();
+                                FirebaseDatabase.getInstance().getReference("profiles").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("geofire").child(model.getKey()).removeValue();
+                                Toast.makeText(context, "One Profile is Deleted Successfully", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                builder.show();
                 return true;
             }
         });
-
+///////May be add dialog box that ask user to "Do u want to delete (Yes or not) option"
     }
 
     @Override
