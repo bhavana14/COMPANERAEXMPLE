@@ -164,9 +164,9 @@ public class Home_Activity extends AppCompatActivity
                             continue;
                         }
                         profileList.add(new ProfileModel(snapshot));
-                        adapter.notifyItemInserted(position);
                         position++;
                     }
+                    adapter.notifyDataSetChanged();
 
                 } else {
                     Toast.makeText(Home_Activity.this, "No Profiles", Toast.LENGTH_SHORT).show();

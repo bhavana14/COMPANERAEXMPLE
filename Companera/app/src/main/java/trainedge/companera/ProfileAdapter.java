@@ -40,7 +40,7 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileHolder> {
     }
 
     @Override
-    public void onBindViewHolder(ProfileHolder holder, int position) {
+    public void onBindViewHolder(ProfileHolder holder, final int position) {
         //databinding
         final ProfileModel model = profileList.get(position);
         holder.tvProfileState.setText(model.getState() ? "active" : "inactive");
@@ -61,6 +61,7 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileHolder> {
             @Override
             public boolean onLongClick(View v) {
                 MaterialDialog.Builder builder=new MaterialDialog.Builder(ProfileAdapter.this.context)
+
                         .canceledOnTouchOutside(false)
                         .content("Are you sure")
                         .positiveText("Yes")
@@ -77,7 +78,7 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileHolder> {
                 return true;
             }
         });
-///////May be add dialog box that ask user to "Do u want to delete (Yes or not) option"
+///
     }
 
     @Override
