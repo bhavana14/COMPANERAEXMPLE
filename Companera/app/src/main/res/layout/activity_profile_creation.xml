@@ -163,17 +163,29 @@
             android:textSize="14sp"
             tools:layout_editor_absoluteX="200dp"
             tools:layout_editor_absoluteY="433dp" />
+
         <Button
+            android:id="@+id/btnSelectDate"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Select Date and Time"
-            android:id="@+id/btnSelectDate"/>
+            android:layout_height="match_parent"
+            android:layout_marginLeft="0dp"
+
+            android:drawableLeft="@drawable/ic_access_time_black_24dp"
+            android:text="Select Time"
+            android:textStyle="italic"
+            android:textSize="24sp"
+            android:textColor="#ffffff"
+            tools:layout_editor_absoluteX="8dp"
+            tools:layout_editor_absoluteY="504dp"
+            style="@style/Widget.AppCompat.Button.Colored"
+            />
+
 
         <Button
             android:id="@+id/btnCreate"
             style="@style/Widget.AppCompat.Button.Colored"
             android:layout_width="match_parent"
-
+            android:drawableLeft="@drawable/ic_edit_location_black_24dp"
             android:layout_height="match_parent"
             android:layout_marginTop="0dp"
             android:fontFamily="sans-serif-condensed"

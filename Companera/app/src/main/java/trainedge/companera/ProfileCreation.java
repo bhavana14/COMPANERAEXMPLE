@@ -2,6 +2,7 @@ package trainedge.companera;
 
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
+import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.database.Cursor;
 
@@ -22,6 +23,7 @@ import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.firebase.geofire.GeoFire;
@@ -36,6 +38,7 @@ import java.util.HashMap;
 import static trainedge.companera.MapsActivity.KEY_ADDRESS;
 import static trainedge.companera.MapsActivity.KEY_LAT;
 import static trainedge.companera.MapsActivity.KEY_LNG;
+import static trainedge.companera.R.id.btnSelectDate;
 import static trainedge.companera.R.id.etProfile;
 import static trainedge.companera.R.id.tvAddress_Get;
 
@@ -43,6 +46,7 @@ public class ProfileCreation extends AppCompatActivity implements AdapterView.On
     TextView Locaddress;
     Button btnCreate;
     Button btnSelectDateTime;
+    Button btnSelectTime;
     private EditText etName;
     private EditText etGeofence;
     private Spinner spRing;
@@ -59,6 +63,9 @@ public class ProfileCreation extends AppCompatActivity implements AdapterView.On
     private Double lng;
     private boolean isDateSet=false;
     private String dateSelected;
+    private String timeSelected;
+    private int mHour;
+    private int mMinute;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +91,8 @@ public class ProfileCreation extends AppCompatActivity implements AdapterView.On
         sSilentMode = (Switch) findViewById(R.id.sSilentMode);
         btnCreate = (Button) findViewById(R.id.btnCreate);
         btnSelectDateTime = (Button) findViewById(R.id.btnSelectDate);
+     //   btnSelectTime = (Button) findViewById(R.id.btnSelecttime);
+
 
 
     }
@@ -111,6 +120,7 @@ public class ProfileCreation extends AppCompatActivity implements AdapterView.On
         spMsg.setOnItemSelectedListener(this);
         btnCreate.setOnClickListener(this);
         btnSelectDateTime.setOnClickListener(this);
+//       btnSelectTime.setOnClickListener(this);
         sVibrate.setOnCheckedChangeListener(this);
         sSilentMode.setOnCheckedChangeListener(this);
     }
@@ -179,10 +189,13 @@ public class ProfileCreation extends AppCompatActivity implements AdapterView.On
             case R.id.btnSelectDate:
                 showSelectorDialog(v);
                 break;
+           /* case R.id.btnSelecttime:
+                showSelectorDialog(v);
+                break;*/
         }
     }
 
-    private void showSelectorDialog(final View v) {
+   /* private void showSelectorDialog(final View v) {
         DatePickerDialog dialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
@@ -193,6 +206,25 @@ public class ProfileCreation extends AppCompatActivity implements AdapterView.On
             }
         }, Calendar.getInstance().get(Calendar.YEAR), Calendar.getInstance().get(Calendar.MONTH), Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
         dialog.show();
+    }
+
+    }*/
+
+   //code for selecting Time
+    private void showSelectorDialog(final View v)
+    {
+        // Launch Time Picker Dialog
+        TimePickerDialog timePickerDialog = new TimePickerDialog(this,
+                new TimePickerDialog.OnTimeSetListener() {
+
+                    @Override
+                    public void onTimeSet(TimePicker view, int hourOfDay,
+                                          int minute) {
+
+                        ((Button) v).setText(hourOfDay + ":" + minute);
+                    }
+                }, mHour, mMinute, false);
+        timePickerDialog.show();
     }
 
     private void createNewSoundProfile() {
