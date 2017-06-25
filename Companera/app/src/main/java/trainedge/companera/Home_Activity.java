@@ -256,11 +256,6 @@ public class Home_Activity extends AppCompatActivity
                 Intent getlocation = new Intent(Home_Activity.this, MapsActivity.class);
                 startActivity(getlocation);
                 break;
-            case R.id.sett_ings:
-                Intent i = new Intent(this, ProfileModification.class);
-               //Intent i = new Intent(this,ViewProfileActivity.class);
-                startActivity(i);
-                break;
 
             case R.id.nav_invite:
                 //// TODO: invite friends

@@ -6,8 +6,8 @@
     android:layout_height="match_parent"
     tools:context="trainedge.companera.Login_Activity">
 
-
     <include layout="@layout/content_login_"
         android:id="@+id/include" />
+
 
 </android.support.design.widget.CoordinatorLayout>

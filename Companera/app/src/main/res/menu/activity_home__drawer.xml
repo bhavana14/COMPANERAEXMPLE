@@ -10,10 +10,7 @@
             android:id="@+id/my_location"
             android:icon="@drawable/map"
             android:title="My Locations" />
-        <item
-            android:id="@+id/sett_ings"
-            android:icon="@drawable/setting"
-            android:title="Settings" />
+
     </group>
 
     <item android:title="Communicate">

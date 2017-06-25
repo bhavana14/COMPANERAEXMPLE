@@ -5,14 +5,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center"
-    android:background="@drawable/feedbackbg"
+    android:background="@drawable/about_background"
     android:gravity="center"
     android:orientation="vertical"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
+
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.wajahatkarim3.feedbackanimsample.MainActivity">
+    tools:context=".Feedback">
 
     <TextView
         android:id="@+id/lblHowHappy"
@@ -20,14 +18,14 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/_100sdp"
         android:gravity="center"
-        android:text="How happy are you with Companera"
-        android:textColor="@android:color/black"
-        android:textSize="@dimen/_12sdp"
+        android:text="How happy are you with Companera ?"
+        android:textColor="#d32141"
+        android:textSize="17sp"
         android:textStyle="bold" />
 
     <android.support.v7.widget.AppCompatRatingBar
         android:id="@+id/ratingBar"
-        style="?android:attr/ratingBarStyleIndicator"
+        style="?android:attr/ratingBarStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
@@ -36,7 +34,8 @@
         android:numStars="5"
         android:rating="0"
         android:stepSize="1"
-        android:theme="@style/RatingBar" />
+        android:theme="@style/RatingBar"
+        android:visibility="visible" />
 
     <LinearLayout
         android:id="@+id/layoutForm"
@@ -53,8 +52,8 @@
             android:layout_marginTop="@dimen/_25sdp"
             android:gravity="center"
             android:text="Yayy! We'd love to hear more"
-            android:textColor="@android:color/black"
-            android:textSize="@dimen/_12sdp"
+            android:textColor="#b4bdda15"
+            android:textSize="17sp"
             android:textStyle="bold" />
 
         <EditText
@@ -91,8 +90,8 @@
             android:layout_marginTop="@dimen/_5sdp"
             android:gravity="center"
             android:text="Woah! Thank you for your feedback!"
-            android:textColor="@android:color/black"
-            android:textSize="@dimen/_12sdp"
+            android:textColor="#ef731b"
+            android:textSize="17sp"
             android:textStyle="bold"
             android:visibility="invisible"
             tools:visibility="visible" />

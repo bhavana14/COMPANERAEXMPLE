@@ -41,7 +41,9 @@
 
             <receiver android:name=".receivers.BootReceiver" />
         </activity>
-        <activity android:name=".Splash_Activity">
+        <activity
+            android:name=".Splash_Activity"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -50,7 +52,8 @@
         </activity>
         <activity
             android:name=".Login_Activity"
-            android:theme="@style/AppTheme" />
+
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".Home_Activity"
             android:label="Home"
@@ -90,8 +93,8 @@
         </activity>
         <activity
             android:name=".Feedback"
-            android:label="@string/title_activity_feedback"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:label="Feedback and Rate us"
+            />
         <activity
             android:name=".AboutActivity"
             android:theme="@style/AppTheme.NoActionBar" />
@@ -129,10 +132,9 @@
             android:process=":remote" />
 
         <activity android:name=".AlertActivity" />
-        <activity android:name=".AboutDeveloper" />
-        <activity
-            android:name=".farzi"
-            android:label="@string/title_activity_farzi"></activity>
+        <activity android:name=".AboutDeveloper"
+            android:label="Developer"/>
+
     </application>
 
 </manifest>

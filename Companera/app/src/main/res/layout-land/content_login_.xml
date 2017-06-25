@@ -19,7 +19,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
-
     <com.facebook.login.widget.LoginButton
         android:id="@+id/login_button"
         android:layout_width="wrap_content"
@@ -74,5 +73,6 @@
         android:textSize="20sp"
         android:textStyle="bold|italic" />
         </RelativeLayout>
-</ScrollView>
+    </ScrollView>
+
 </RelativeLayout>
