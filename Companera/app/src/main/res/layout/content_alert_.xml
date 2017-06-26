@@ -23,7 +23,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="16dp"
-        android:text="Please enable your GPS in settings to use app properply"
+        android:text="Please enable your GPS in settings to use App properly"
         android:textAlignment="center"
         android:textColor="#eef"
         android:textSize="30sp"

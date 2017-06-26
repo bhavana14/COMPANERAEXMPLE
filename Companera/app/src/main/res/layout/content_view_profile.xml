@@ -168,10 +168,11 @@
             android:id="@+id/btnCreate"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-
+            android:background="#1a8662"
             android:layout_marginTop="0dp"
             android:fontFamily="sans-serif-condensed"
             android:text="UPDATE"
+            android:textColor="#ffffff"
             android:textSize="24sp"
             android:textStyle="italic"
             tools:layout_editor_absoluteX="8dp"
