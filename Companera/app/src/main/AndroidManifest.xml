@@ -7,7 +7,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.VIBRATE" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
@@ -39,7 +39,7 @@
                 <data android:scheme="@string/fb_login_protocol_scheme" />
             </intent-filter>
 
-            <receiver android:name=".receivers.BootReceiver" />
+
         </activity>
         <activity
             android:name=".Splash_Activity"
@@ -93,8 +93,7 @@
         </activity>
         <activity
             android:name=".Feedback"
-            android:label="Feedback and Rate us"
-            />
+            android:label="Feedback and Rate us" />
         <activity
             android:name=".AboutActivity"
             android:theme="@style/AppTheme.NoActionBar" />
@@ -132,9 +131,16 @@
             android:process=":remote" />
 
         <activity android:name=".AlertActivity" />
-        <activity android:name=".AboutDeveloper"
-            android:label="Developer"/>
+        <activity
+            android:name=".AboutDeveloper"
+            android:label="Developer" />
 
+        <receiver
+            android:name=".receivers.BootReceiver"
+            android:exported="true"
+            android:process=":background">
+
+        </receiver>
     </application>
 
 </manifest>
